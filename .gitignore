@@ -1,0 +1,111 @@
+# .NET / .NET Core
+## .NET Core
+## JetBrains IDEs (Rider, ReSharper, etc.)
+## OS / System files
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.log
+*.cache
+*.orig
+
+# JetBrains IDEs (Rider, ReSharper, etc.)
+.idea/
+*.sln.DotSettings.user
+*.csproj.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+*.symbols.nupkg
+packages/
+**/packages/
+nuget.config
+nuget.exe
+
+# .NET user secrets
+**/secrets.json
+**/Microsoft/UserSecrets/
+
+# Test artifacts
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+*.coverage.xml
+*.json
+TestResults/
+coverage/
+*.opencover.xml
+
+# Avalonia
+*.xaml.sc
+*.axaml.cs.bak
+*.axaml.bak
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Icon?
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+.fuse_hidden*
+
+# Node modules (if using web technologies)
+node_modules/
+wwwroot/node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.sik
+*.suo
+*.cache
+
+# Application settings (user-specific)
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+*.local.json
+
+# Documentation build output
+_site/
+docfx_site/
+
+# CI/CD artifacts (if running in CI)
+artifacts/
+
+# End of .gitignore
