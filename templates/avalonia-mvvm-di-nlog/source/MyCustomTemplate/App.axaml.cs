@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Core.Settings;
 using MyCustomTemplate.Services;
 using MyCustomTemplate.Views;
 
@@ -41,6 +42,11 @@ public partial class App : Application
             // Global exception handlers
             Logger.Trace("Registering global exception handlers");
             RegisterGlobalExceptionHandlers();
+
+            // Initialize loading and saving of Settings
+            SettingsService settingsService = Services.GetRequiredService<SettingsService>();
+            Logger.SetLogLevel(settingsService.Settings.Debug.LogLevel);
+            settingsService.SaveSettings();
 
             // Load Language
             LocalizationService.LoadLanguage();

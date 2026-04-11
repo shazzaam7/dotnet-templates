@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Core.Settings;
 using MyCustomTemplate.ViewModels;
 using MyCustomTemplate.Views;
 
@@ -30,6 +31,8 @@ public static class ServiceConfigurator
             ServiceCollection services = new ServiceCollection();
 
             // Register Services here
+            // Settings
+            services.AddSingleton<SettingsService>();
 
             // Register Views/ViewModels here
             // Pages
