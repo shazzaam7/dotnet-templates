@@ -18,18 +18,59 @@ public class LogLevelJsonConverter : JsonConverter<LogLevel>
     /// <returns>The deserialized LogLevel value corresponding to the integer provided in the JSON.</returns>
     public override LogLevel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        int value = reader.GetInt32();
-        return value switch
+        // Try int first
+        if (reader.TokenType == JsonTokenType.Number)
         {
-            0 => LogLevel.Trace,
-            1 => LogLevel.Debug,
-            2 => LogLevel.Info,
-            3 => LogLevel.Warn,
-            4 => LogLevel.Error,
-            5 => LogLevel.Fatal,
-            6 => LogLevel.Off,
-            _ => LogLevel.Info
-        };
+            int value = reader.GetInt32();
+            return value switch
+            {
+                0 => LogLevel.Trace,
+                1 => LogLevel.Debug,
+                2 => LogLevel.Info,
+                3 => LogLevel.Warn,
+                4 => LogLevel.Error,
+                5 => LogLevel.Fatal,
+                6 => LogLevel.Off,
+                _ => LogLevel.Info
+            };
+        }
+
+        // String as a fallback
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            // Maybe it's int saved as a string ("2")
+            if (reader.TryGetInt32(out int intValue))
+            {
+                return intValue switch
+                {
+                    0 => LogLevel.Trace,
+                    1 => LogLevel.Debug,
+                    2 => LogLevel.Info,
+                    3 => LogLevel.Warn,
+                    4 => LogLevel.Error,
+                    5 => LogLevel.Fatal,
+                    6 => LogLevel.Off,
+                    _ => LogLevel.Info
+                };
+            }
+
+            // Try to get
+            string? value = reader.GetString();
+            if (!string.IsNullOrEmpty(value))
+            {
+                try
+                {
+                    return LogLevel.FromString(value);
+                }
+                catch
+                {
+                    // Failed to parse LogLevel by string
+                }
+            }
+        }
+
+        // Default to Info level
+        return LogLevel.Info;
     }
 
     /// <summary>

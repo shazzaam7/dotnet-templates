@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MyCustomTemplate.Core.Converters;
 using MyCustomTemplate.Core.Logging;
 using MyCustomTemplate.Core.Utilities;
 
@@ -47,7 +48,11 @@ public sealed class SettingsService : ISettingsService<Settings>
         {
             WriteIndented = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-            Converters = { new JsonStringEnumConverter() }
+            Converters =
+            {
+                new JsonStringEnumConverter(),
+                new LogLevelJsonConverter()
+            }
         };
 
         _settingsPath = PathResolver.GetFullPath("Config", "config.json");
