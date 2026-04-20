@@ -46,7 +46,8 @@ public sealed class SettingsService : ISettingsService<Settings>
         _jsonOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+            Converters = { new JsonStringEnumConverter() }
         };
 
         _settingsPath = PathResolver.GetFullPath("Config", "config.json");
