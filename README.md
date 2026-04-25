@@ -53,15 +53,50 @@ avalonia-mvvm-di-nlog/
 | NLog | 6.1.2 | Structured logging |
 | NUnit | 4.5.1 | Unit testing framework |
 
-## Installation
+### Custom Core Library
+
+A customizable class library template with built-in NLog logging, settings management, and utility helpers for building robust applications.
+
+**Template ID:** `custom-core-library`
+
+#### Features
+
+- **NLog Logging** - Structured logging with console and file targets
+- **Settings Management** - JSON-based settings with backup/recovery
+- **Path Resolution** - Cross-platform path utilities
+- **.NET 10** - Targets the latest .NET framework
+- **Nullable References** - Enabled for better code safety
+- **Logging Levels** - Dynamic log level control at runtime
+
+#### Project Structure
+
+```
+custom-core-library/
+└── MyCustomTemplate/
+    ├── Converters/                 # JSON converters for serialization
+    ├── Logging/                    # Static Logger class with NLog
+    ├── Settings/                  # Settings model and service
+    │   └── Sections/              # Settings sections (debug, etc.)
+    ├── Utilities/                # Path resolvers and helpers
+    └── MyCustomTemplate.csproj    # Project file
+```
+
+#### Technologies Used
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| NLog | 6.1.2 | Structured logging |
+
+#### Installation
 
 ### Install from Local Directory
 
 ```bash
-# Navigate to the template directory
-cd templates/avalonia-mvvm-di-nlog
-
 # Install the template
+dotnet new install .
+
+# Also install the Custom Core Library template
+cd ../custom-core-library
 dotnet new install .
 ```
 
@@ -92,6 +127,17 @@ dotnet build
 dotnet run
 ```
 
+### Create a Custom Core Library
+
+```bash
+# Create a new core library
+dotnet new custom-core-library -n MyApp.Core -o ./MyApp.Core
+
+# Navigate and build
+cd ./MyApp.Core
+dotnet build
+```
+
 ## Development
 
 ### Building the Template
@@ -111,7 +157,11 @@ dotnet test
 ### Uninstalling the Template
 
 ```bash
+# Uninstall Avalonia template
 dotnet new uninstall avalonia-mvvm-di-nlog
+
+# Uninstall Custom Core Library template
+dotnet new uninstall custom-core-library
 ```
 
 ## Architecture
