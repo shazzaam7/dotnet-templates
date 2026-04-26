@@ -20,6 +20,9 @@ A production-ready Avalonia UI desktop application template with MVVM pattern, d
 - **Unit Testing** - NUnit test project pre-configured
 - **Exception Handling** - Global exception handlers across all threads
 - **Localization Support** - Built-in language resource structure
+- **Scripts** - Development utility scripts for localization, translation progress, and changelog generation
+- **GitHub Workflows** - Pre-configured CI/CD workflows with automated releases
+- **Issue Templates** - Pre-configured bug report and feature request templates
 - **.NET 10** - Targets the latest .NET framework
 - **Nullable References** - Enabled for better code safety
 
@@ -37,8 +40,10 @@ avalonia-mvvm-di-nlog/
 │   │   └── Program.cs              # Application bootstrap
 │   └── MyCustomTemplate.Core/      # Core Layer (Business Logic)
 │       └── (Logging, models, etc.)
-└── tests/
-    └── MyCustomTemplate.Tests/     # Unit tests (NUnit)
+├── tests/
+│   └── MyCustomTemplate.Tests/     # Unit tests (NUnit)
+├── scripts/                    # Development scripts
+└── .github/                 # GitHub workflows
 ```
 
 #### Technologies Used
@@ -137,6 +142,40 @@ dotnet new custom-core-library -n MyApp.Core -o ./MyApp.Core
 cd ./MyApp.Core
 dotnet build
 ```
+
+### Scripts
+
+The template includes scripts in the `scripts/` folder. Some require updates after project creation:
+
+| Script | File | Update Required |
+|--------|------|-----------------|
+| Check localization | `scripts/check_localization.py` | Update project folder path if different from `MyCustomTemplate` (line 17) |
+| Generate changelog | `scripts/generate_changelog.py` | Update `REPOSITORY` to `username/repo` (line 30) |
+| Generate translation progress | `scripts/generate_translation_progress.py` | Update project folder paths (lines 15, 378, 381) |
+| Generate translation chart | `scripts/generate_translation_chart.js` | No changes needed |
+
+### GitHub Workflows
+
+The template includes GitHub Actions workflows in `.github/workflows/`:
+
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| `build_release.yml` | Push to main/dev, PR closed | Builds the app, runs localization check, creates releases |
+| `build_job.yml` | Called by build_release | Builds and tests the app |
+| `create_release.yml` | Called by build_release | Creates releases (nightly auto-updates, stable creates draft) |
+| `update_translation_progress.yml` | Called by build_release | Updates translation progress chart, creates PR to main |
+
+The workflows release to the same repository:
+- **Nightly** - Updates the `nightly` tag automatically
+- **Stable** - Creates a draft release (manually publish from GitHub)
+
+Review and update as needed for your project:
+- Update project names in workflow files if different from `MyCustomTemplate`
+- Update paths in `build_release.yml` if your source/tests directories differ
+
+### Issue Templates
+
+The template includes issue templates in `.github/ISSUE_TEMPLATE/`. Review and update as needed for your project.
 
 ## Development
 
