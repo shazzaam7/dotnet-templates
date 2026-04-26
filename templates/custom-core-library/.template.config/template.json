@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Shazzaam",
+  "classifications": [
+    "Library",
+    "Class Library",
+    "Core",
+    "Logging",
+    "Settings"
+  ],
+  "description": "A customizable class library with built-in NLog logging infrastructure, settings management, and utility helpers.",
+  "groupIdentity": "Shazzaam.CustomCoreLibrary",
+  "identity": "Shazzaam.CustomCoreLibrary",
+  "name": "Custom Core Library",
+  "shortName": "custom-core-library",
+  "sourceName": "MyCustomTemplate",
+  "defaultName": "MyApp.Core",
+  "preferNameDirectory": true,
+  "type": "project",
+  "tags": {
+    "language": "C#"
+  },
+  "symbols": {
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    },
+    "HostIdentifier": {
+      "type": "bind",
+      "binding": "HostIdentifier"
+    }
+  },
+  "primaryOutputs": [
+    { "path": "MyCustomTemplate.sln" }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [{ "text": "Run 'dotnet restore'" }],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

@@ -45,7 +45,6 @@ nuget.exe
 *.coverage
 *.coveragexml
 *.coverage.xml
-*.json
 TestResults/
 coverage/
 *.opencover.xml
