@@ -29,7 +29,7 @@ public abstract class LenientJsonDeserializer
             JsonNode? rootNode = JsonNode.Parse(json);
             if (rootNode == null)
             {
-                Logger.Debug("JSON parsed to null node, returning defaults");
+                AppLogger.Debug("JSON parsed to null node, returning defaults");
                 return defaults;
             }
 
@@ -38,7 +38,7 @@ public abstract class LenientJsonDeserializer
         }
         catch (Exception ex)
         {
-            Logger.Warning($"Lenient deserialization failed: {ex.Message}. Returning defaults.");
+            AppLogger.Warning($"Lenient deserialization failed: {ex.Message}. Returning defaults.");
             return defaults;
         }
     }
@@ -92,7 +92,7 @@ public abstract class LenientJsonDeserializer
             }
             catch (Exception ex)
             {
-                Logger.Debug($"Skipping invalid property '{jsonName}': {ex.Message}");
+                AppLogger.Debug($"Skipping invalid property '{jsonName}': {ex.Message}");
             }
         }
     }
@@ -114,7 +114,7 @@ public abstract class LenientJsonDeserializer
         }
         catch (Exception ex)
         {
-            Logger.Debug($"Value deserialization failed for '{targetType.Name}': {ex.Message}");
+            AppLogger.Debug($"Value deserialization failed for '{targetType.Name}': {ex.Message}");
             return null;
         }
     }

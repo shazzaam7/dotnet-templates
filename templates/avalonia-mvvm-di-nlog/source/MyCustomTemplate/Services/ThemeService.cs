@@ -72,11 +72,11 @@ public class ThemeService
     {
         if (!_themeConfigs.ContainsKey(theme))
         {
-            Logger.Error($"Theme {theme} is not configured");
+            AppLogger.Error($"Theme {theme} is not configured");
             return;
         }
 
-        Logger.Info($"Switching to {theme} theme");
+        AppLogger.Info($"Switching to {theme} theme");
 
         // Remove the previously loaded theme and apply the new theme
         RemoveCurrentThemeResources();
@@ -93,7 +93,7 @@ public class ThemeService
     {
         if (!_themeConfigs.TryGetValue(theme, out ThemeConfiguration? config))
         {
-            Logger.Error($"No configuration found for theme {theme}");
+            AppLogger.Error($"No configuration found for theme {theme}");
             return;
         }
 
@@ -131,14 +131,14 @@ public class ThemeService
 
             _themeResources[theme] = resourceInclude;
             Application.Current.Resources.MergedDictionaries.Add(resourceInclude);
-            Logger.Info($"Theme resources loaded for {theme}");
+            AppLogger.Info($"Theme resources loaded for {theme}");
         }
         catch (Exception ex)
         {
-            Logger.Error($"Failed to load theme resources for {theme}: {ex.Message}");
+            AppLogger.Error($"Failed to load theme resources for {theme}: {ex.Message}");
             if (fallbackTheme != null)
             {
-                Logger.Warning($"Falling back to {fallbackTheme.Value} theme");
+                AppLogger.Warning($"Falling back to {fallbackTheme.Value} theme");
                 ApplyTheme(fallbackTheme.Value);
             }
         }
@@ -161,7 +161,7 @@ public class ThemeService
                 continue;
             }
             Application.Current.Resources.MergedDictionaries.Remove(kvp.Value);
-            Logger.Debug($"Removed theme resources for {kvp.Key}");
+            AppLogger.Debug($"Removed theme resources for {kvp.Key}");
         }
 
         _themeResources.Clear();

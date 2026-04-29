@@ -107,14 +107,14 @@ public static class LocalizationService
 
                 if (removed > 0)
                 {
-                    Logger.Warning($"Language '{langCode}': {removed} untranslated string(s) will fall back to '{DefaultLanguageCode}'");
+                    AppLogger.Warning($"Language '{langCode}': {removed} untranslated string(s) will fall back to '{DefaultLanguageCode}'");
                 }
 
                 merged.Add(_currentOverlay);
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to load language '{langCode}', falling back to '{DefaultLanguageCode}': {ex.Message}");
+                AppLogger.Error($"Failed to load language '{langCode}', falling back to '{DefaultLanguageCode}': {ex.Message}");
                 langCode = DefaultLanguageCode;
             }
         }
@@ -176,8 +176,8 @@ public static class LocalizationService
     {
         if (_defaultLanguage is null || string.IsNullOrEmpty(_baseUri))
         {
-            Logger.Warning("LocalizationService has not been initialized");
-            Logger.Info($"Initializing LocalizationService with baseUri: {_baseUri}");
+            AppLogger.Warning("LocalizationService has not been initialized");
+            AppLogger.Info($"Initializing LocalizationService with baseUri: {_baseUri}");
             Initialize(_baseUri);
         }
     }

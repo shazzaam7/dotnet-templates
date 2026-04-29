@@ -26,7 +26,7 @@ public static class ServiceConfigurator
     /// </exception>
     public static IServiceProvider ConfigureServices()
     {
-        Logger.Debug("Configuring dependency injection services");
+        AppLogger.Debug("Configuring dependency injection services");
         try
         {
             ServiceCollection services = new ServiceCollection();
@@ -44,12 +44,12 @@ public static class ServiceConfigurator
                 {
                     Theme savedTheme = settings.Settings.Ui.Theme;
                     themeService.SetTheme(savedTheme);
-                    Logger.Info($"Loaded saved theme: {savedTheme}");
+                    AppLogger.Info($"Loaded saved theme: {savedTheme}");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed to apply saved theme");
-                    Logger.LogExceptionDetails(ex);
+                    AppLogger.Error($"Failed to apply saved theme");
+                    AppLogger.LogExceptionDetails(ex);
                 }
                 return themeService;
             });
@@ -72,8 +72,8 @@ public static class ServiceConfigurator
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to configure services");
-            Logger.LogExceptionDetails(ex);
+            AppLogger.Error("Failed to configure services");
+            AppLogger.LogExceptionDetails(ex);
             throw;
         }
     }

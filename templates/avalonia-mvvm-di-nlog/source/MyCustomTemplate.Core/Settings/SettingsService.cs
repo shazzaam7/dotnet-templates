@@ -75,7 +75,7 @@ public sealed class SettingsService : ISettingsService<Settings>
             {
                 if (!File.Exists(_settingsPath))
                 {
-                    Logger.Info("Settings file does not exist, creating default settings");
+                    AppLogger.Info("Settings file does not exist, creating default settings");
                     _settings = new Settings();
                     SaveSettingsInternal();
                     _settingsLoaded = true;
@@ -92,7 +92,7 @@ public sealed class SettingsService : ISettingsService<Settings>
             }
             catch (Exception ex)
             {
-                Logger.Warning($"Failed to load settings, attempting backup: {ex.Message}");
+                AppLogger.Warning($"Failed to load settings, attempting backup: {ex.Message}");
 
                 // Try loading from backup
                 try
@@ -102,17 +102,17 @@ public sealed class SettingsService : ISettingsService<Settings>
                         string backupJson = File.ReadAllText(_settingsBackupPath);
                         _settings = LenientJsonDeserializer.Deserialize<Settings>(backupJson, _jsonOptions);
                         _settingsLoaded = true;
-                        Logger.Info("Settings loaded from backup");
+                        AppLogger.Info("Settings loaded from backup");
                         return _settings;
                     }
                 }
                 catch (Exception backupEx)
                 {
-                    Logger.Warning($"Backup load failed: {backupEx.Message}");
+                    AppLogger.Warning($"Backup load failed: {backupEx.Message}");
                 }
 
                 // Fall back to defaults
-                Logger.Info("Using default settings");
+                AppLogger.Info("Using default settings");
                 _settings = new Settings();
                 _settingsLoaded = true;
                 return _settings;
@@ -189,8 +189,8 @@ public sealed class SettingsService : ISettingsService<Settings>
             }
             catch (Exception ex)
             {
-                Logger.Error($"There was an unexpected error saving settings to {_settingsPath}");
-                Logger.LogExceptionDetails(ex);
+                AppLogger.Error($"There was an unexpected error saving settings to {_settingsPath}");
+                AppLogger.LogExceptionDetails(ex);
             }
         }
     }
@@ -217,7 +217,7 @@ public sealed class SettingsService : ISettingsService<Settings>
         }
         catch (Exception ex)
         {
-            Logger.Warning($"Failed to create settings backup: {ex.Message}");
+            AppLogger.Warning($"Failed to create settings backup: {ex.Message}");
         }
     }
 }

@@ -105,7 +105,7 @@ All core logic should be placed in **MyCustomTemplate.Core** to facilitate easie
   partial void OnCheckForUpdatesOnStartupChanged(bool oldValue, bool newValue)
   {
       if (oldValue == newValue) return;
-      Logger.Info<SettingsPageViewModel>(
+      Log.Info<SettingsPageViewModel>(
           $"Check for Updates on Startup changed from '{oldValue}' to '{newValue}'");
       _settings.Settings.UpdateChecks.CheckForUpdatesOnStartup = newValue;
       _settings.SaveSettings();
@@ -156,7 +156,7 @@ All core logic should be placed in **MyCustomTemplate.Core** to facilitate easie
 ### Error Handling and Logging
 
 - Use `try-catch` blocks to handle exceptions appropriately
-- Log all exceptions using the `Logger` class:
+- Log all exceptions using the `Log` class:
   ```csharp
   try
   {
@@ -164,8 +164,8 @@ All core logic should be placed in **MyCustomTemplate.Core** to facilitate easie
   }
   catch (Exception ex)
   {
-      Logger.Error<ClassName>("Error description");
-      Logger.LogExceptionDetails<ClassName>(ex);
+      Log.Error<ClassName>("Error description");
+      Log.LogExceptionDetails<ClassName>(ex);
   }
   ```
 
