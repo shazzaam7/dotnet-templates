@@ -4,15 +4,15 @@ Customized .NET templates for rapidly scaffolding applications with consistent a
 
 ## Available Templates
 
-### Avalonia MVVM + DI + NLog
+### FluentAvalonia MVVM + DI + NLog
 
-A production-ready Avalonia UI desktop application template with MVVM pattern, dependency injection, and structured logging.
+A production-ready FluentAvalonia desktop application template with MVVM pattern, dependency injection, and structured logging.
 
-**Template ID:** `avalonia-mvvm-di-nlog`
+**Template ID:** `fluentavalonia-mvvm-di-nlog`
 
 #### Features
 
-- **Avalonia UI 12.0** - Cross-platform desktop UI framework
+- **FluentAvalonia UI 3.0** - Cross-platform desktop UI framework
 - **MVVM Pattern** - Using CommunityToolkit.Mvvm for reactive view models
 - **Dependency Injection** - Microsoft.Extensions.DependencyInjection for loose coupling
 - **NLog Logging** - Structured logging with file and console targets
@@ -29,9 +29,9 @@ A production-ready Avalonia UI desktop application template with MVVM pattern, d
 #### Project Structure
 
 ```
-avalonia-mvvm-di-nlog/
+fluentavalonia-mvvm-di-nlog/
 ├── source/
-│   ├── MyCustomTemplate/           # UI Layer (Avalonia)
+│   ├── MyCustomTemplate/           # UI Layer (FluentAvalonia)
 │   │   ├── Views/                  # Avalonia views
 │   │   ├── ViewModels/             # MVVM view models
 │   │   ├── Services/               # Service configuration & DI
@@ -50,11 +50,46 @@ avalonia-mvvm-di-nlog/
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| Avalonia | 12.0.0 | Cross-platform UI framework |
-| Avalonia.Desktop | 12.0.0 | Desktop platform support |
-| Avalonia.Fonts.Inter | 12.0.0 | Inter font family |
+| FluentAvalonia | 3.0.0-preview1 | Cross-platform UI framework |
+| Avalonia | 12.0.2 | UI framework |
+| Avalonia.Desktop | 12.0.2 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.0.2 | Inter font family |
+| Avalonia.Themes.Fluent | 12.0.2 | Fluent theme |
 | CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
-| Microsoft.Extensions.DependencyInjection | 10.0.5 | Dependency injection container |
+| Microsoft.Extensions.DependencyInjection | 10.0.7 | Dependency injection container |
+| NLog | 6.1.2 | Structured logging |
+| NUnit | 4.5.1 | Unit testing framework |
+
+### Avalonia MVVM + DI + NLog
+
+A production-ready Avalonia UI desktop application template with MVVM pattern, dependency injection, and structured logging.
+
+**Template ID:** `avalonia-mvvm-di-nlog`
+
+#### Features
+
+- **Avalonia UI 12.0** - Cross-platform desktop UI framework
+- **MVVM Pattern** - Using CommunityToolkit.Mvvm for reactive view models
+- **Dependency Injection** - Microsoft.Extensions.DependencyInjection for loose coupling
+- **NLog Logging** - Structured logging with file and console targets
+- **Clean Architecture** - Separated into UI and Core projects
+- **Unit Testing** - NUnit test project pre-configured
+- **Exception Handling** - Global exception handlers across all threads
+- **Localization Support** - Built-in language resource structure
+- **Scripts** - Development utility scripts
+- **.NET 10** - Targets the latest .NET framework
+- **Nullable References** - Enabled for better code safety
+
+#### Technologies Used
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| Avalonia | 12.0.2 | UI framework |
+| Avalonia.Desktop | 12.0.2 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.0.2 | Inter font family |
+| Avalonia.Themes.Fluent | 12.0.2 | Fluent theme |
+| CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
+| Microsoft.Extensions.DependencyInjection | 10.0.7 | Dependency injection container |
 | NLog | 6.1.2 | Structured logging |
 | NUnit | 4.5.1 | Unit testing framework |
 
@@ -79,7 +114,7 @@ A customizable class library template with built-in NLog logging, settings manag
 custom-core-library/
 └── MyCustomTemplate/
     ├── Converters/                 # JSON converters for serialization
-    ├── Logging/                    # Static Logger class with NLog
+    ├── Logging/                    # Static AppLogger class with NLog
     ├── Settings/                  # Settings model and service
     │   └── Sections/              # Settings sections (debug, etc.)
     ├── Utilities/                # Path resolvers and helpers
@@ -97,17 +132,25 @@ custom-core-library/
 ### Install from Local Directory
 
 ```bash
-# Install the template
-dotnet new install .
+# Install the FluentAvalonia template
+dotnet new install templates/fluentavalonia-mvvm-di-nlog
 
-# Also install the Custom Core Library template
-cd ../custom-core-library
-dotnet new install .
+# Install the Avalonia template
+dotnet new install templates/avalonia-mvvm-di-nlog
+
+# Install the Custom Core Library template
+dotnet new install templates/custom-core-library
 ```
 
 ## Usage
 
-### Create a New Project
+### Create a New FluentAvalonia Project
+
+```bash
+dotnet new fluentavalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
+```
+
+### Create a New Avalonia Project
 
 ```bash
 dotnet new avalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
@@ -123,6 +166,9 @@ dotnet new avalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
 ### Example
 
 ```bash
+# Create a new FluentAvalonia app with DI and logging
+dotnet new fluentavalonia-mvvm-di-nlog -n MyApp -o ./src/MyApp
+
 # Create a new Avalonia app with DI and logging
 dotnet new avalonia-mvvm-di-nlog -n MyApp -o ./src/MyApp
 
@@ -196,6 +242,9 @@ dotnet test
 ### Uninstalling the Template
 
 ```bash
+# Uninstall FluentAvalonia template
+dotnet new uninstall fluentavalonia-mvvm-di-nlog
+
 # Uninstall Avalonia template
 dotnet new uninstall avalonia-mvvm-di-nlog
 
@@ -225,7 +274,7 @@ public static IServiceProvider ConfigureServices()
 
 ### Logging
 
-NLog is integrated through the Core layer with a static `Logger` class providing:
+NLog is integrated through the Core layer with a static `AppLogger` class providing:
 
 - Trace, Debug, Info, Warn, Error, Fatal levels
 - Exception detail logging

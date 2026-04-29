@@ -1,6 +1,6 @@
-# MyCustomTemplate
+# Avalonia MVVM App with Dependency Injection and NLog
 
-A cross-platform desktop application built with Avalonia UI.
+A cross-platform desktop application built with Avalonia UI, MVVM pattern, dependency injection, and custom NLog logging infrastructure.
 
 ## Getting Started
 
