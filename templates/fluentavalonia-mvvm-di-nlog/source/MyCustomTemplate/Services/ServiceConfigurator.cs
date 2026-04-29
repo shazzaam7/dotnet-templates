@@ -35,6 +35,25 @@ public static class ServiceConfigurator
             // Settings
             services.AddSingleton<SettingsService>();
 
+            // Theme Service
+            services.AddSingleton<ThemeService>(provider =>
+            {
+                ThemeService themeService = new ThemeService();
+                SettingsService settings = provider.GetRequiredService<SettingsService>();
+                try
+                {
+                    Theme savedTheme = settings.Settings.Ui.Theme;
+                    themeService.SetTheme(savedTheme);
+                    AppLogger.Info($"Loaded saved theme: {savedTheme}");
+                }
+                catch (Exception ex)
+                {
+                    AppLogger.Error($"Failed to apply saved theme");
+                    AppLogger.LogExceptionDetails(ex);
+                }
+                return themeService;
+            });
+
             // Register Views/ViewModels here
             // Pages
 
@@ -47,7 +66,8 @@ public static class ServiceConfigurator
 
             // Initialize services
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-
+            // Initialize ThemeService
+            _ = serviceProvider.GetRequiredService<ThemeService>();
             return serviceProvider;
         }
         catch (Exception ex)

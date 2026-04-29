@@ -1,10 +1,11 @@
 using Avalonia.Controls;
+using FluentAvalonia.UI.Windowing;
 using Microsoft.Extensions.DependencyInjection;
 using MyCustomTemplate.ViewModels;
 
 namespace MyCustomTemplate.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : FAAppWindow
 {
     // Properties
     private MainWindowViewModel _viewModel { get; set; }
