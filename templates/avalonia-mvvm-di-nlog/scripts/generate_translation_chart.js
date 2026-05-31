@@ -63,7 +63,7 @@ async function generateTranslationChart(translations, totalStrings) {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 22px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('Xenia Manager Translation Progress', width / 2, 35);
+    ctx.fillText('Translation Progress', width / 2, 35);
 
     // Subtitle
     ctx.fillStyle = '#ccc';

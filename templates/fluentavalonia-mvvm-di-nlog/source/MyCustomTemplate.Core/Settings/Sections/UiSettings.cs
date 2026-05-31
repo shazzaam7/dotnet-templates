@@ -10,14 +10,14 @@ namespace MyCustomTemplate.Core.Settings.Sections;
 public class UiSettings
 {
     /// <summary>
-    /// <para>Language used by Xenia Manager UI</para>
+    /// <para>Language used by the application UI</para>
     /// Default Language = English
     /// </summary>
     [JsonPropertyName("language")]
     public string Language { get; set; } = "en";
 
     /// <summary>
-    /// <para>Theme used by Xenia Manager UI</para>
+    /// <para>Theme used by the application UI</para>
     /// Default Theme = Light
     /// </summary>
     [JsonPropertyName("theme")]

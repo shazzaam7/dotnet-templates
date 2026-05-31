@@ -1,19 +1,19 @@
 ﻿<!--
-================================================================================
-THEME TEMPLATE FOR XENIA MANAGER
-================================================================================
+===============================================================================
+THEME TEMPLATE
+===============================================================================
 
-This file serves as a TEMPLATE for creating new themes in Xenia Manager.
+This file serves as a TEMPLATE for creating new themes.
 To create a new theme:
 
 1. Copy this file to a new .axaml file (e.g., "MyCustomTheme.axaml")
 2. Replace all color values with your theme's colors
-3. Update ThemeService.cs to register your new theme
+3. Register your new theme
 4. Build and test your theme
 
-================================================================================
+===============================================================================
 REQUIRED COLOR DEFINITIONS
-================================================================================
+===============================================================================
 Copy all Color elements below into your theme file and modify the values.
 Do NOT modify the x:Key names - they are used by the application.
 -->
@@ -42,7 +42,7 @@ Do NOT modify the x:Key names - they are used by the application.
 
     <!-- =====================================================================
          ACCENT COLORS
-         Your theme's primary accent color (Xbox Green by default)
+         Your theme's primary accent color
          ===================================================================== -->
 
     <!-- Main accent color -->
@@ -251,7 +251,7 @@ Do NOT modify the x:Key names - they are used by the application.
 
     <!-- =====================================================================
          FOCUS COLORS
-         Focus indicator colors (Xbox controller focus ring)
+         Focus indicator colors
          ===================================================================== -->
 
     <Color x:Key="FocusStrokeColorOuter">#FF107C10</Color>
@@ -274,28 +274,22 @@ Do NOT modify the x:Key names - they are used by the application.
 </ResourceDictionary>
 
 <!--
-================================================================================
+===============================================================================
 NEXT STEPS AFTER CREATING YOUR THEME
-================================================================================
+===============================================================================
 
 1. Save your theme file in the Resources/Themes/ directory
    Example: "MyCustomTheme.axaml"
-2. Register your theme in ThemeService.cs:
-   Add your theme to the _themeConfigs dictionary:
-   [Theme.MyCustom] = new ThemeConfiguration
-   {
-       BaseTheme = ThemeVariant.Dark, // or ThemeVariant.Light
-       ResourcePath = "avares://XeniaManager/Resources/Themes/MyCustomTheme.axaml",
-       FallbackTheme = Theme.Dark // optional fallback
-   },
+2. Register your theme:
+   Load the resource dictionary and apply it to the application
 
 3. Add your theme to the Theme enum in Models/Theme.cs (if needed)
 
 4. Build and test your theme!
 
-================================================================================
+===============================================================================
 TIPS FOR CREATING THEMES
-================================================================================
+===============================================================================
 
 - For DARK themes: Use dark backgrounds (#FF000000) with light text (#FFFFFFFF)
 - For LIGHT themes: Use light backgrounds (#FFFFFFFF) with dark text (#FF000000)
@@ -303,5 +297,5 @@ TIPS FOR CREATING THEMES
 - Test your theme with different controls (buttons, textboxes, lists, etc.)
 - The accent color should work on both light and dark backgrounds
 
-================================================================================
+===============================================================================
 -->

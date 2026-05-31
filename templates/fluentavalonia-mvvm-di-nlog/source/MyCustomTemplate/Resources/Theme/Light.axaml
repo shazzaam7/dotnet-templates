@@ -2,14 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Colors -->
-    <!-- Primary Background Colors - Xbox 360 Clean Whites/Light Grays -->
+    <!-- Primary Background Colors - Clean Whites/Light Grays -->
     <Color x:Key="SolidBackgroundFillColorBase">#FFFFFFFF</Color>
     <Color x:Key="SolidBackgroundFillColorSecondary">#FFF8F8F8</Color>
     <Color x:Key="SolidBackgroundFillColorTertiary">#FFF2F2F2</Color>
     <Color x:Key="SolidBackgroundFillColorQuarternary">#FFECECEC</Color>
     <Color x:Key="SolidBackgroundFillColorTransparent">#00FFFFFF</Color>
 
-    <!-- Xbox Green Accent Colors -->
+    <!-- Accent Colors -->
     <Color x:Key="SystemAccentColor">#FF107C10</Color>
     <Color x:Key="SystemAccentColorLight1">#FF2D9B2D</Color>
     <Color x:Key="SystemAccentColorLight2">#FF52B043</Color>
@@ -34,7 +34,7 @@
     <Color x:Key="TextOnAccentFillColorSecondary">#80000000</Color>
     <Color x:Key="TextOnAccentFillColorDisabled">#66000000</Color>
 
-    <!-- Control Fill Colors - Xbox 360 Light Style -->
+    <!-- Control Fill Colors - Light Style -->
     <Color x:Key="ControlFillColorDefault">#0D000000</Color>
     <Color x:Key="ControlFillColorSecondary">#0A000000</Color>
     <Color x:Key="ControlFillColorTertiary">#08000000</Color>
@@ -74,7 +74,7 @@
     <Color x:Key="ControlStrongStrokeColorDefault">#66000000</Color>
     <Color x:Key="ControlStrongStrokeColorDisabled">#26000000</Color>
 
-    <!-- Card Colors - Xbox 360 Elevated Cards -->
+    <!-- Card Colors - Elevated Cards -->
     <Color x:Key="CardBackgroundFillColorDefault">#FFFFFFFF</Color>
     <Color x:Key="CardBackgroundFillColorSecondary">#FFF8F8F8</Color>
     <Color x:Key="CardStrokeColorDefault">#0D000000</Color>
@@ -129,7 +129,7 @@
     <Color x:Key="AccentAcrylicBackgroundFillColorBase">#FF7BC67B</Color>
     <Color x:Key="AccentAcrylicInAppFillColorBase">#FF7BC67B</Color>
 
-    <!-- Focus Colors - Xbox 360 Green Glow -->
+    <!-- Focus Colors -->
     <Color x:Key="FocusStrokeColorOuter">#FF107C10</Color>
     <Color x:Key="FocusStrokeColorInner">#33107C10</Color>
 
@@ -263,7 +263,7 @@
     <SolidColorBrush x:Key="SystemControlBackgroundChromeMediumLowBrush" Color="#FFF2F2F2" />
     <SolidColorBrush x:Key="SystemControlTransparentBrush" Color="Transparent" />
 
-    <!-- Navigation View Specific - Xbox 360 Light Style -->
+    <!-- Navigation View Specific -->
     <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="#FFFFFFFF" />
@@ -302,7 +302,7 @@
     <SolidColorBrush x:Key="ComboBoxDropDownBackgroundPressed" Color="#FFF2F2F2" />
     <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#0D000000" />
 
-    <!-- ListBox/ListView Item Backgrounds - Xbox 360 Selection Style -->
+    <!-- ListBox/ListView Item Backgrounds -->
     <SolidColorBrush x:Key="ListViewItemBackground" Color="Transparent" />
     <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#08000000" />
     <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="#0D000000" />
@@ -313,7 +313,7 @@
     <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FF000000" />
     <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FF000000" />
 
-    <!-- Button Specific - Xbox 360 Light Style -->
+    <!-- Button Specific -->
     <SolidColorBrush x:Key="ButtonBackground" Color="#FFF2F2F2" />
     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FFECECEC" />
     <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#FFE6E6E6" />
@@ -327,7 +327,7 @@
     <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#0D000000" />
     <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#08000000" />
 
-    <!-- Accent Button - Xbox Green -->
+    <!-- Accent Button -->
     <SolidColorBrush x:Key="AccentButtonBackground" Color="#FF107C10" />
     <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="#FF2D9B2D" />
     <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="#FF0E6B0E" />
@@ -337,7 +337,7 @@
     <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#CCFFFFFF" />
     <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#66FFFFFF" />
 
-    <!-- TextBox Specific - Xbox 360 Light Style -->
+    <!-- TextBox Specific -->
     <SolidColorBrush x:Key="TextControlBackground" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#FFF8F8F8" />
     <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#FFFFFFFF" />
@@ -352,7 +352,7 @@
     <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#0D000000" />
     <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#66000000" />
 
-    <!-- ToggleSwitch Specific - Xbox 360 Light Style -->
+    <!-- ToggleSwitch Specific -->
     <SolidColorBrush x:Key="ToggleSwitchContentForeground" Color="#CC000000" />
     <SolidColorBrush x:Key="ToggleSwitchContentForegroundDisabled" Color="#4D000000" />
     <SolidColorBrush x:Key="ToggleSwitchFillOff" Color="#26000000" />
@@ -364,7 +364,7 @@
     <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="#FF0E6B0E" />
     <SolidColorBrush x:Key="ToggleSwitchFillOnDisabled" Color="#33107C10" />
 
-    <!-- CheckBox Specific - Xbox 360 Light Style -->
+    <!-- CheckBox Specific -->
     <SolidColorBrush x:Key="CheckBoxBackgroundUnchecked" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver" Color="#FFF8F8F8" />
     <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPressed" Color="#FFF2F2F2" />
@@ -378,12 +378,12 @@
     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#CCFFFFFF" />
     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#66FFFFFF" />
 
-    <!-- ProgressBar/Ring Specific - Xbox Green -->
+    <!-- ProgressBar/Ring Specific -->
     <SolidColorBrush x:Key="ProgressBarBackground" Color="#0D000000" />
     <SolidColorBrush x:Key="ProgressBarForeground" Color="#FF107C10" />
     <SolidColorBrush x:Key="ProgressRingForeground" Color="#FF107C10" />
 
-    <!-- Slider Specific - Xbox 360 Light Style -->
+    <!-- Slider Specific -->
     <SolidColorBrush x:Key="SliderTrackFill" Color="#0D000000" />
     <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="#1A000000" />
     <SolidColorBrush x:Key="SliderTrackFillPressed" Color="#0D000000" />
@@ -400,7 +400,7 @@
     <!-- Region Brush -->
     <SolidColorBrush x:Key="RegionBrush" Color="#FFFFFFFF" />
 
-    <!-- ScrollBar Specific - Xbox 360 Minimal Style -->
+    <!-- ScrollBar Specific -->
     <SolidColorBrush x:Key="ScrollBarBackground" Color="#00000000" />
     <SolidColorBrush x:Key="ScrollBarPanningThumbBackground" Color="#1A000000" />
     <SolidColorBrush x:Key="ScrollBarThumbFill" Color="#1A000000" />
@@ -410,7 +410,7 @@
     <SolidColorBrush x:Key="ScrollBarButtonBackgroundPointerOver" Color="#08000000" />
     <SolidColorBrush x:Key="ScrollBarButtonBackgroundPressed" Color="#0D000000" />
 
-    <!-- ToolTip Specific - Xbox 360 Light Style -->
+    <!-- ToolTip Specific -->
     <SolidColorBrush x:Key="ToolTipBackground" Color="#F2F2F2F2" />
     <SolidColorBrush x:Key="ToolTipForeground" Color="#FF000000" />
     <SolidColorBrush x:Key="ToolTipBorderBrush" Color="#1A000000" />

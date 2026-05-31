@@ -9,7 +9,7 @@
     <Color x:Key="SolidBackgroundFillColorQuarternary">#FF101010</Color>
     <Color x:Key="SolidBackgroundFillColorTransparent">#00000000</Color>
 
-    <!-- Xbox 360 Green Accent -->
+    <!-- Green Accent -->
     <Color x:Key="SystemAccentColor">#FF107C10</Color>
     <Color x:Key="SystemAccentColorLight1">#FF1FA21F</Color>
     <Color x:Key="SystemAccentColorLight2">#FF46C746</Color>
@@ -87,7 +87,7 @@
     <Color x:Key="AccentAcrylicBackgroundFillColorBase">#FF0E6A0E</Color>
     <Color x:Key="AccentAcrylicInAppFillColorBase">#FF0E6A0E</Color>
 
-    <!-- Focus (Xbox ring glow style) -->
+    <!-- Focus -->
     <Color x:Key="FocusStrokeColorOuter">#FF46C746</Color>
     <Color x:Key="FocusStrokeColorInner">#6646C746</Color>
 
