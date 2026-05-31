@@ -50,15 +50,15 @@ fluentavalonia-mvvm-di-nlog/
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| FluentAvalonia | 3.0.0-preview1 | Cross-platform UI framework |
-| Avalonia | 12.0.2 | UI framework |
-| Avalonia.Desktop | 12.0.2 | Desktop platform support |
-| Avalonia.Fonts.Inter | 12.0.2 | Inter font family |
-| Avalonia.Themes.Fluent | 12.0.2 | Fluent theme |
+| FluentAvalonia | 3.0.0-preview4 | Cross-platform UI framework |
+| Avalonia | 12.0.4 | UI framework |
+| Avalonia.Desktop | 12.0.4 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.0.4 | Inter font family |
+| Avalonia.Themes.Fluent | 12.0.4 | Fluent theme |
 | CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
-| Microsoft.Extensions.DependencyInjection | 10.0.7 | Dependency injection container |
-| NLog | 6.1.2 | Structured logging |
-| NUnit | 4.5.1 | Unit testing framework |
+| Microsoft.Extensions.DependencyInjection | 10.0.8 | Dependency injection container |
+| NLog | 6.1.3 | Structured logging |
+| NUnit | 4.6.1 | Unit testing framework |
 
 ### Avalonia MVVM + DI + NLog
 
@@ -84,14 +84,14 @@ A production-ready Avalonia UI desktop application template with MVVM pattern, d
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| Avalonia | 12.0.2 | UI framework |
-| Avalonia.Desktop | 12.0.2 | Desktop platform support |
-| Avalonia.Fonts.Inter | 12.0.2 | Inter font family |
-| Avalonia.Themes.Fluent | 12.0.2 | Fluent theme |
+| Avalonia | 12.0.4 | UI framework |
+| Avalonia.Desktop | 12.0.4 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.0.4 | Inter font family |
+| Avalonia.Themes.Fluent | 12.0.4 | Fluent theme |
 | CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
-| Microsoft.Extensions.DependencyInjection | 10.0.7 | Dependency injection container |
-| NLog | 6.1.2 | Structured logging |
-| NUnit | 4.5.1 | Unit testing framework |
+| Microsoft.Extensions.DependencyInjection | 10.0.8 | Dependency injection container |
+| NLog | 6.1.3 | Structured logging |
+| NUnit | 4.6.1 | Unit testing framework |
 
 ### Custom Core Library
 
@@ -125,7 +125,7 @@ custom-core-library/
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| NLog | 6.1.2 | Structured logging |
+| NLog | 6.1.3 | Structured logging |
 
 #### Installation
 
