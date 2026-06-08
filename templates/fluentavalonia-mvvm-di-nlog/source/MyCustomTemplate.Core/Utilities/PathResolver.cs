@@ -6,13 +6,19 @@
 /// </summary>
 public static class PathResolver
 {
+    // Fields
+    /// <summary>
+    /// The resolved base directory path for the application
+    /// </summary>
     private static readonly string _baseDirectory = ResolveBaseDirectory();
 
+    // Properties
     /// <summary>
     /// Base directory for the app
     /// </summary>
     public static string BaseDirectory => _baseDirectory;
 
+    // Functions
     /// <summary>
     /// Resolves the most appropriate base directory for the application at runtime.
     /// </summary>

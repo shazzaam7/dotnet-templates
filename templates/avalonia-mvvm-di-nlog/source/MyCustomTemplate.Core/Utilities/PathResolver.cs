@@ -6,6 +6,9 @@
 /// </summary>
 public static class PathResolver
 {
+    /// <summary>
+    /// The resolved base directory path for the application
+    /// </summary>
     private static readonly string _baseDirectory = ResolveBaseDirectory();
 
     /// <summary>

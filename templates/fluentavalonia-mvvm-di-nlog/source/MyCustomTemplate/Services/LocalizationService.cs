@@ -17,6 +17,7 @@ namespace MyCustomTemplate.Services;
 /// </summary>
 public static class LocalizationService
 {
+    // Fields
     /// <summary>
     /// Sentinel value that translators place in resource files to indicate a string has not been translated yet.
     /// The entry is removed at load time, so the default language value is used instead.
@@ -52,6 +53,7 @@ public static class LocalizationService
         // Add Languages here
     ];
 
+    // Functions
     /// <summary>
     /// Initializes the LocalizationHelper and loads the default language as the permanent fallback.
     /// </summary>

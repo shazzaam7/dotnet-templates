@@ -14,10 +14,25 @@ namespace MyCustomTemplate.Services;
 /// </summary>
 public class ThemeService
 {
+    // Fields
+    /// <summary>
+    /// The currently applied theme
+    /// </summary>
     private Theme _currentTheme = Theme.Dark;
+
+    /// <summary>
+    /// The FluentAvalonia theme instance from the application styles
+    /// </summary>
     private FluentAvaloniaTheme? _faTheme;
+
+    /// <summary>
+    /// Loaded theme resource dictionaries keyed by theme
+    /// </summary>
     private readonly Dictionary<Theme, ResourceInclude?> _themeResources = new Dictionary<Theme, ResourceInclude?>();
 
+    /// <summary>
+    /// Configuration for each available theme, including base variant and resource paths
+    /// </summary>
     private readonly Dictionary<Theme, ThemeConfiguration> _themeConfigs = new Dictionary<Theme, ThemeConfiguration>
     {
         [Theme.Light] = new ThemeConfiguration
@@ -35,13 +50,28 @@ public class ThemeService
         // New themes need to be added here
     };
 
+    /// <summary>
+    /// Configuration for a single theme variant
+    /// </summary>
     private class ThemeConfiguration
     {
+        /// <summary>
+        /// The base Avalonia theme variant (Light/Dark)
+        /// </summary>
         public ThemeVariant? BaseTheme { get; set; }
+
+        /// <summary>
+        /// The path to the theme resource dictionary
+        /// </summary>
         public string? ResourcePath { get; set; }
+
+        /// <summary>
+        /// The fallback theme to use if loading this theme fails
+        /// </summary>
         public Theme? FallbackTheme { get; set; }
     }
 
+    // Constructor
     /// <summary>
     /// Initializes the ThemeService and configures all available themes
     /// </summary>
@@ -64,6 +94,7 @@ public class ThemeService
         }
     }
 
+    // Properties
     /// <summary>
     /// Sets the current application theme
     /// </summary>

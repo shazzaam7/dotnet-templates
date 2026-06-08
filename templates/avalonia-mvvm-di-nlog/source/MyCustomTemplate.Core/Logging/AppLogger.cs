@@ -7,13 +7,28 @@ using NLog.Targets;
 
 namespace MyCustomTemplate.Core.Logging;
 
+/// <summary>
+/// Provides a static, application-wide logging facade built on top of NLog.
+/// Configures colored console and rolling file targets at startup and exposes
+/// level-specific helpers that automatically capture caller context.
+/// </summary>
 public static class AppLogger
 {
+    // Fields
+    /// <summary>
+    /// The NLog logger instance used for all application logging
+    /// </summary>
     private static readonly NLog.Logger _logger;
+
+    /// <summary>
+    /// The logging configuration with console and file targets
+    /// </summary>
     private static readonly LoggingConfiguration _config;
 
+    // Constructor
     static AppLogger()
     {
+        // Configure console target with level-based color highlighting
         _config = new LoggingConfiguration();
 
         ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget("console")
@@ -38,6 +53,7 @@ public static class AppLogger
         _config.AddTarget(consoleTarget);
         _config.AddRule(LogLevel.Trace, LogLevel.Fatal, consoleTarget);
 
+        // Configure rolling file target for persistent logs
         FileTarget fileTarget = new FileTarget("file")
         {
             FileName = PathResolver.GetFullPath("Logs", $"Log-${{shortdate}}.log"),
@@ -52,6 +68,11 @@ public static class AppLogger
         _logger = LogManager.GetCurrentClassLogger();
     }
 
+    // Functions
+    /// <summary>
+    /// Updates the minimum log level across all configured logging targets at runtime.
+    /// </summary>
+    /// <param name="level">The new minimum log level to apply.</param>
     public static void SetLogLevel(LogLevel level)
     {
         IList<LoggingRule> rules = _config.LoggingRules;
@@ -65,16 +86,26 @@ public static class AppLogger
         _logger.Info($"Logging level updated: {level}");
     }
 
+    /// <summary>
+    /// Flushes all buffered log entries to their respective targets.
+    /// </summary>
     public static void Flush()
     {
         LogManager.Flush();
     }
 
+    /// <summary>
+    /// Resolves the unmanaged type name for a given type parameter, stripping generic arity
+    /// and flattening nested type names into a dot-separated format.
+    /// </summary>
+    /// <typeparam name="T">The type whose name should be resolved.</typeparam>
+    /// <returns>A human-readable type name without generic backtick suffixes.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string GetTypeName<T>()
     {
         Type type = typeof(T);
 
+        // Strip generic arity (e.g. "List`1" -> "List")
         string typeName = type.Name;
         int backtickIndex = typeName.IndexOf('`');
         if (backtickIndex > 0)
@@ -95,6 +126,13 @@ public static class AppLogger
         return $"{declaringName}.{typeName}";
     }
 
+    /// <summary>
+    /// Logs a message at the Trace level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Trace(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -104,6 +142,13 @@ public static class AppLogger
         _logger.Trace($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Logs a message at the Debug level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Debug(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -113,6 +158,13 @@ public static class AppLogger
         _logger.Debug($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Logs a message at the Info level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Info(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -122,6 +174,13 @@ public static class AppLogger
         _logger.Info($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Logs a message at the Warning level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Warning(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -131,6 +190,13 @@ public static class AppLogger
         _logger.Warn($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Logs a message at the Error level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Error(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -140,6 +206,13 @@ public static class AppLogger
         _logger.Error($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Logs a message at the Fatal level with automatic caller context capture.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void Fatal(string message,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -149,6 +222,13 @@ public static class AppLogger
         _logger.Fatal($"[{context}] {message}");
     }
 
+    /// <summary>
+    /// Formats caller context into a standardized "FileName.MemberName:LineNumber" string.
+    /// </summary>
+    /// <param name="memberName">The caller member name.</param>
+    /// <param name="filePath">The caller file path.</param>
+    /// <param name="lineNumber">The caller line number.</param>
+    /// <returns>A formatted context string for log output.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string FormatContext(string? memberName, string? filePath, int lineNumber)
     {
@@ -166,6 +246,14 @@ public static class AppLogger
             : $"{fileName}.{memberName}";
     }
 
+    /// <summary>
+    /// Logs a detailed exception report including nested inner exceptions and optional system environment information.
+    /// </summary>
+    /// <param name="ex">The exception to log.</param>
+    /// <param name="includeEnvironmentInfo">Whether to include system environment information in the report.</param>
+    /// <param name="memberName">Automatically captured caller member name.</param>
+    /// <param name="filePath">Automatically captured caller file path.</param>
+    /// <param name="lineNumber">Automatically captured caller line number.</param>
     public static void LogExceptionDetails(Exception ex, bool includeEnvironmentInfo = true,
         [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
@@ -296,6 +384,12 @@ public static class AppLogger
         _logger.Error($"[{className}] ===== Exception Report End =====");
     }
 
+    /// <summary>
+    /// Recursively logs each level of an exception chain with indented detail.
+    /// </summary>
+    /// <param name="ex">The exception to log.</param>
+    /// <param name="className">Optional class name context prefix.</param>
+    /// <param name="depth">The current depth in the exception chain.</param>
     private static void LogExceptionWithDepth(Exception ex, string? className = null, int depth = 0)
     {
         while (true)
@@ -347,6 +441,9 @@ public static class AppLogger
         }
     }
 
+    /// <summary>
+    /// Gracefully shuts down the NLog logging engine, flushing all remaining log entries.
+    /// </summary>
     public static void Shutdown()
     {
         LogManager.Shutdown();

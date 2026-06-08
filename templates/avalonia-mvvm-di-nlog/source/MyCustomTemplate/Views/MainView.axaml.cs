@@ -4,12 +4,21 @@ using MyCustomTemplate.ViewModels;
 
 namespace MyCustomTemplate.Views;
 
+/// <summary>
+/// The main application view
+/// </summary>
 public partial class MainView : UserControl
 {
-    // Properties
+    // Fields
+    /// <summary>
+    /// The view model bound to this view
+    /// </summary>
     private MainViewViewModel _viewModel { get; set; }
 
     // Constructor
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainView"/> class
+    /// </summary>
     public MainView()
     {
         InitializeComponent();

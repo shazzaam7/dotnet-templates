@@ -12,11 +12,35 @@ namespace MyCustomTemplate.Core.Settings;
 /// </summary>
 public sealed class SettingsService : ISettingsService<Settings>
 {
+    // Fields
+    /// <summary>
+    /// JSON serialization options for settings persistence
+    /// </summary>
     private readonly JsonSerializerOptions _jsonOptions;
+
+    /// <summary>
+    /// The file path to the settings JSON file
+    /// </summary>
     private readonly string _settingsPath;
+
+    /// <summary>
+    /// The file path to the settings backup JSON file
+    /// </summary>
     private readonly string _settingsBackupPath;
+
+    /// <summary>
+    /// Thread synchronization lock for settings operations
+    /// </summary>
     private readonly Lock _lock = new Lock();
+
+    /// <summary>
+    /// The current in-memory settings instance
+    /// </summary>
     private Settings _settings = null!;
+
+    /// <summary>
+    /// Indicates whether the settings have been loaded from storage
+    /// </summary>
     private bool _settingsLoaded;
 
     /// <summary>
