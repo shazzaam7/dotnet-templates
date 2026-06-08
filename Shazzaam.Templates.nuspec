@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Shazzaam.DotNetTemplates</id>
+    <version>1.0.0</version>
+    <title>.NET Custom Templates</title>
+    <authors>Shazzaam</authors>
+    <description>
+      Custom .NET templates for rapidly scaffolding applications with consistent architecture and best practices.
+      Includes templates for FluentAvalonia MVVM apps, Avalonia UI MVVM apps, and class libraries.
+    </description>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="templates\**" target="content" />
+  </files>
+</package>

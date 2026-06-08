@@ -1,0 +1,32 @@
+name: Build Templates Package
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pack:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Pack templates into NuGet package
+        shell: pwsh
+        run: |
+          $version = "1.0.0.${{ github.run_number }}"
+          nuget pack Shazzaam.Templates.nuspec -Version $version -OutputDirectory nupkg
+
+      - name: Upload NuGet package
+        uses: actions/upload-artifact@v6
+        with:
+          name: Shazzaam.DotNetTemplates
+          path: nupkg/*.nupkg

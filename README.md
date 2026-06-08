@@ -1,5 +1,7 @@
 # .NET Custom Templates
 
+[![Build Templates Package](https://github.com/Shazzaam7/dotnet-templates/actions/workflows/build-templates.yml/badge.svg)](https://github.com/Shazzaam7/dotnet-templates/actions/workflows/build-templates.yml)
+
 Customized .NET templates for rapidly scaffolding applications with consistent architecture and best practices.
 
 ## Available Templates
@@ -128,6 +130,13 @@ custom-core-library/
 | NLog | 6.1.3 | Structured logging |
 
 #### Installation
+
+### Install from NuGet Package (Recommended)
+
+```bash
+# Install all templates from the latest NuGet package
+dotnet new install Shazzaam.DotNetTemplates
+```
 
 ### Install from Local Directory
 
