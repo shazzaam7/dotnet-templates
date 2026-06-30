@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using FluentAvalonia.UI.Windowing;
 using Microsoft.Extensions.DependencyInjection;
+using MyCustomTemplate.Controls;
 using MyCustomTemplate.ViewModels;
 
 namespace MyCustomTemplate.Views;
@@ -25,5 +26,6 @@ public partial class MainWindow : FAAppWindow
         InitializeComponent();
         _viewModel = App.Services.GetRequiredService<MainWindowViewModel>();
         DataContext = _viewModel;
+        SplashScreen = new AppSplashScreen();
     }
 }
