@@ -48,7 +48,7 @@ public static class ServiceConfigurator
                 }
                 catch (Exception ex)
                 {
-                    AppLogger.Error($"Failed to apply saved theme");
+                    AppLogger.Error("Failed to apply saved theme");
                     AppLogger.LogExceptionDetails(ex);
                 }
                 return themeService;

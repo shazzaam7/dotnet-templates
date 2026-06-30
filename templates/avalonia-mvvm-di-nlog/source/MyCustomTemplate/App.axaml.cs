@@ -40,7 +40,6 @@ public partial class App : Application
         if (Desktop != null)
         {
             // Global exception handlers
-            AppLogger.Trace("Registering global exception handlers");
             RegisterGlobalExceptionHandlers();
 
             // Initialize loading and saving of Settings
