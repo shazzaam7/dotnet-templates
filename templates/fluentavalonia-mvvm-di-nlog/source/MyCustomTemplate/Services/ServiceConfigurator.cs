@@ -57,6 +57,9 @@ public static class ServiceConfigurator
             // Notification Service
             services.AddSingleton<INotificationService, NotificationService>();
 
+            // MessageBox Service
+            services.AddSingleton<IMessageBoxService, MessageBoxService>();
+
             // Register Views/ViewModels here
             // Pages
 
