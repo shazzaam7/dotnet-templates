@@ -54,6 +54,9 @@ public static class ServiceConfigurator
                 return themeService;
             });
 
+            // Notification Service
+            services.AddSingleton<INotificationService, NotificationService>();
+
             // Register Views/ViewModels here
             // Pages
 
