@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 using MyCustomTemplate.Core.Models;
 using MyCustomTemplate.Core.Settings;
 using MyCustomTemplate.ViewModels;

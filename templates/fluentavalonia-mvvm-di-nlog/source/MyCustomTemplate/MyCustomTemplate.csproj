@@ -15,5 +15,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyCustomTemplate.Core\MyCustomTemplate.Core.csproj" />
+      <ProjectReference Include="..\MyCustomTemplate.Logging\MyCustomTemplate.Logging.csproj" />
     </ItemGroup>
 </Project>

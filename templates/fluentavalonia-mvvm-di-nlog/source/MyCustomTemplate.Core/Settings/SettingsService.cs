@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MyCustomTemplate.Core.Converters;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 using MyCustomTemplate.Core.Utilities;
 
 namespace MyCustomTemplate.Core.Settings;

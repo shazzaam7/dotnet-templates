@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 
 namespace MyCustomTemplate.Services;
 

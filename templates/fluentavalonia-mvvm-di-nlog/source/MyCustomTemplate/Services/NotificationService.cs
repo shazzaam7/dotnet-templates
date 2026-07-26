@@ -9,7 +9,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using FluentAvalonia.Core;
 using FluentAvalonia.UI.Controls;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 using MyCustomTemplate.Views;
 
 namespace MyCustomTemplate.Services;

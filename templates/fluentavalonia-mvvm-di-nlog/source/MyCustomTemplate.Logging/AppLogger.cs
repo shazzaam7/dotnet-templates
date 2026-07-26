@@ -1,11 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-using MyCustomTemplate.Core.Utilities;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 
-namespace MyCustomTemplate.Core.Logging;
+namespace MyCustomTemplate.Logging;
 
 /// <summary>
 /// Provides a static, application-wide logging facade built on top of NLog.
@@ -56,7 +55,7 @@ public static class AppLogger
         // Configure rolling file target for persistent logs
         FileTarget fileTarget = new FileTarget("file")
         {
-            FileName = PathResolver.GetFullPath("Logs", $"Log-${{shortdate}}.log"),
+            FileName = Path.Combine(AppContext.BaseDirectory, "Logs", $"Log-${{shortdate}}.log"),
             Layout = @"[${longdate:format=HH\:mm\:ss.fff}][${level:uppercase=true:format=FirstCharacter}]${message}",
             KeepFileOpen = false,
             Encoding = Encoding.UTF8

@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 using MyCustomTemplate.Core.Settings;
 using MyCustomTemplate.Services;
 using MyCustomTemplate.Views;

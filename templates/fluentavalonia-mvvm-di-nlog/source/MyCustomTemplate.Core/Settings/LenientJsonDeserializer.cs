@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 
 namespace MyCustomTemplate.Core.Settings;
 
