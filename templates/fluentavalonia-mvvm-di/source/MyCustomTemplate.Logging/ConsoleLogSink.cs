@@ -41,7 +41,7 @@ public sealed class ConsoleLogSink : ILogSink
         {
             TextWriter writer = entry.Level >= LogLevel.Error ? Console.Error : Console.Out;
 
-            string levelLabel = ToLevelLabel(entry.Level);
+            string levelLabel = entry.Level.ToLevelLabel();
             WriteLevelSegment(writer, levelLabel, entry.Level);
             writer.Write('[');
             writer.Write(entry.Category);
@@ -62,23 +62,6 @@ public sealed class ConsoleLogSink : ILogSink
                 writer.WriteLine(entry.Exception);
             }
         }
-    }
-
-    /// <summary>
-    /// Converts a <see cref="LogLevel"/> to its uppercase string label.
-    /// </summary>
-    private static string ToLevelLabel(LogLevel level)
-    {
-        return level switch
-        {
-            LogLevel.Trace => "TRACE",
-            LogLevel.Debug => "DEBUG",
-            LogLevel.Info => "INFO",
-            LogLevel.Warning => "WARNING",
-            LogLevel.Error => "ERROR",
-            LogLevel.Critical => "CRITICAL",
-            _ => "LOG",
-        };
     }
 
     /// <summary>

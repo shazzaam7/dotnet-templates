@@ -13,7 +13,7 @@
 public sealed class CompositeLogSink : ILogSink, IDisposable
 {
     private readonly ILogSink[] _sinks;
-    private bool _disposed;
+    private int _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CompositeLogSink"/> class
@@ -63,12 +63,10 @@ public sealed class CompositeLogSink : ILogSink, IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (_disposed)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
         {
             return;
         }
-
-        _disposed = true;
 
         foreach (ILogSink sink in _sinks)
         {

@@ -124,7 +124,7 @@ public sealed class FileLogSink : ILogSink, IDisposable
             }
 
             _writer!.Write('[');
-            _writer.Write(ToLevelLabel(entry.Level));
+            _writer.Write(entry.Level.ToLevelLabel());
             _writer.Write(']');
             _writer.Write('[');
             _writer.Write(entry.Category);
@@ -172,12 +172,20 @@ public sealed class FileLogSink : ILogSink, IDisposable
 
     /// <summary>
     /// Rotates to a new log file for the given date, flushing and disposing the previous writer.
+    /// If opening the new file fails, the sink enters a broken state and silently drops entries.
     /// </summary>
     private void Rotate(DateOnly newDate)
     {
         CloseWriter();
-        OpenWriter(newDate);
-        _currentDate = newDate;
+        try
+        {
+            OpenWriter(newDate);
+            _currentDate = newDate;
+        }
+        catch
+        {
+            _writer = null;
+        }
     }
 
     /// <summary>
@@ -235,17 +243,4 @@ public sealed class FileLogSink : ILogSink, IDisposable
         }
     }
 
-    /// <summary>
-    /// Converts a <see cref="LogLevel"/> to its uppercase string label.
-    /// </summary>
-    private static string ToLevelLabel(LogLevel level) => level switch
-    {
-        LogLevel.Trace => "TRACE",
-        LogLevel.Debug => "DEBUG",
-        LogLevel.Info => "INFO",
-        LogLevel.Warning => "WARNING",
-        LogLevel.Error => "ERROR",
-        LogLevel.Critical => "CRITICAL",
-        _ => "LOG",
-    };
 }

@@ -173,6 +173,34 @@ public class MyCustomTemplateLoggerTests
     }
 
     [Test]
+    public void Shutdown_ReplacesSinkWithNoOp()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.Shutdown();
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        logger.Info("after shutdown");
+
+        Assert.That(testSink.LastEntry, Is.Null);
+    }
+
+    [Test]
+    public void LogExceptionDetails_EntrySourcePointsToCaller()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.MinimumLevel = LogLevel.Trace;
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        InvalidOperationException ex = new("test");
+        logger.LogExceptionDetails(ex, includeEnvironmentInfo: false);
+
+        Assert.That(testSink.Entries.Count, Is.GreaterThan(0));
+        Assert.That(testSink.Entries[0].SourceMemberName, Does.Contain("LogExceptionDetails_EntrySourcePointsToCaller"));
+    }
+
+    [Test]
     public void Info_LogsToSink()
     {
         TestLogSink testSink = new TestLogSink();

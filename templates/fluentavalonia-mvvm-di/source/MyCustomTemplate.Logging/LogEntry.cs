@@ -4,7 +4,7 @@
 /// Represents a single log entry containing the message, severity, source location, and optional exception data.
 /// This is an immutable value type passed by reference to log sinks for efficient allocation-free logging.
 /// </summary>
-/// <param name="Timestamp">The UTC date and time when the log entry was created.</param>
+/// <param name="Timestamp">The local date and time when the log entry was created.</param>
 /// <param name="Level">The severity level of the log entry.</param>
 /// <param name="Category">
 /// A string identifier for the logging category (e.g., "Settings", "DI", "Localization").

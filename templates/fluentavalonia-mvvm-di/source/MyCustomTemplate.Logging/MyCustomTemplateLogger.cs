@@ -153,7 +153,18 @@ public sealed class MyCustomTemplateLogger
             {
                 disposable.Dispose();
             }
+
+            _sink = new NoOpLogSink();
         }
+    }
+
+    /// <summary>
+    /// A no-op sink that silently discards all log entries.
+    /// Used as the default sink and as a replacement after <see cref="Shutdown"/>.
+    /// </summary>
+    private sealed class NoOpLogSink : ILogSink
+    {
+        public void Write(in LogEntry entry) { }
     }
 
     /// <summary>
@@ -387,22 +398,23 @@ public sealed class MyCustomTemplateLogger
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int lineNumber = 0)
     {
         string context = FormatContext(memberName, filePath, lineNumber);
-        Critical($"[{context}] ===== Exception Report Start =====");
-        Critical($"[{context}] Timestamp (UTC): {DateTime.UtcNow:O}");
+        string sourceFileName = filePath != null ? Path.GetFileName(filePath) : "";
+        WriteCritical($"[{context}] ===== Exception Report Start =====", sourceFileName, lineNumber, memberName);
+        WriteCritical($"[{context}] Timestamp (local): {DateTime.Now:O}", sourceFileName, lineNumber, memberName);
 
-        LogExceptionWithDepth(ex, context);
+        LogExceptionWithDepth(ex, context, sourceFileName, lineNumber, memberName);
 
         if (includeEnvironmentInfo)
         {
-            Critical($"[{context}] === System Information ===");
-            Critical($"[{context}] Machine Name: {Environment.MachineName}");
-            Critical($"[{context}] OS Version: {Environment.OSVersion}");
-            Critical($"[{context}] .NET Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
-            Critical($"[{context}] Process Architecture: {System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}");
-            Critical($"[{context}] Current Directory: {Environment.CurrentDirectory}");
+            WriteCritical($"[{context}] === System Information ===", sourceFileName, lineNumber, memberName);
+            WriteCritical($"[{context}] Machine Name: {Environment.MachineName}", sourceFileName, lineNumber, memberName);
+            WriteCritical($"[{context}] OS Version: {Environment.OSVersion}", sourceFileName, lineNumber, memberName);
+            WriteCritical($"[{context}] .NET Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}", sourceFileName, lineNumber, memberName);
+            WriteCritical($"[{context}] Process Architecture: {System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}", sourceFileName, lineNumber, memberName);
+            WriteCritical($"[{context}] Current Directory: {Environment.CurrentDirectory}", sourceFileName, lineNumber, memberName);
         }
 
-        Critical($"[{context}] ===== Exception Report End =====");
+        WriteCritical($"[{context}] ===== Exception Report End =====", sourceFileName, lineNumber, memberName);
     }
 
     /// <summary>
@@ -426,55 +438,68 @@ public sealed class MyCustomTemplateLogger
     }
 
     /// <summary>
+    /// Writes a Critical-level log entry directly, bypassing caller attribute capture
+    /// to preserve the correct source location from the original caller.
+    /// </summary>
+    private void WriteCritical(string message, string sourceFileName, int sourceLine, string? sourceMemberName)
+    {
+        Write(LogLevel.Critical, Category, message, exception: null,
+            sourceFileName, sourceLine, sourceMemberName ?? "");
+    }
+
+    /// <summary>
     /// Recursively logs each level of an exception chain with indented detail,
     /// including type, message, source, stack trace, data entries, and inner exceptions.
     /// </summary>
     /// <param name="ex">The exception to log.</param>
     /// <param name="context">The caller context prefix for each line.</param>
+    /// <param name="sourceFileName">Source file name for log entry metadata.</param>
+    /// <param name="sourceLine">Source line number for log entry metadata.</param>
+    /// <param name="sourceMemberName">Source member name for log entry metadata.</param>
     /// <param name="depth">The current depth in the inner exception chain.</param>
-    private void LogExceptionWithDepth(Exception ex, string? context = null, int depth = 0)
+    private void LogExceptionWithDepth(Exception ex, string? context, string sourceFileName, int sourceLine, string? sourceMemberName, int depth = 0)
     {
         while (true)
         {
             string indent = new string(' ', depth * 2);
             string prefix = context != null ? $"[{context}] " : "";
 
-            Critical($"{prefix}{indent}Exception Level: {depth}");
-            Critical($"{prefix}{indent}Type: {ex.GetType().FullName}");
-            Critical($"{prefix}{indent}Message: {ex.Message}");
-            Critical($"{prefix}{indent}Source: {ex.Source}");
-            Critical($"{prefix}{indent}HResult: {ex.HResult}");
+            WriteCritical($"{prefix}{indent}Exception Level: {depth}", sourceFileName, sourceLine, sourceMemberName);
+            WriteCritical($"{prefix}{indent}Type: {ex.GetType().FullName}", sourceFileName, sourceLine, sourceMemberName);
+            WriteCritical($"{prefix}{indent}Message: {ex.Message}", sourceFileName, sourceLine, sourceMemberName);
+            WriteCritical($"{prefix}{indent}Source: {ex.Source}", sourceFileName, sourceLine, sourceMemberName);
+            WriteCritical($"{prefix}{indent}HResult: {ex.HResult}", sourceFileName, sourceLine, sourceMemberName);
             if (ex.HelpLink != null)
             {
-                Critical($"{prefix}{indent}Help Link: {ex.HelpLink}");
+                WriteCritical($"{prefix}{indent}Help Link: {ex.HelpLink}", sourceFileName, sourceLine, sourceMemberName);
             }
 
             if (ex.Data.Count > 0)
             {
-                Critical($"{prefix}{indent}Data:");
+                WriteCritical($"{prefix}{indent}Data:", sourceFileName, sourceLine, sourceMemberName);
                 foreach (object? key in ex.Data.Keys)
                 {
-                    Critical($"{prefix}{indent}  {key}: {ex.Data[key]}");
+                    WriteCritical($"{prefix}{indent}  {key}: {ex.Data[key]}", sourceFileName, sourceLine, sourceMemberName);
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(ex.StackTrace))
             {
-                Critical($"{prefix}{indent}StackTrace:");
+                WriteCritical($"{prefix}{indent}StackTrace:", sourceFileName, sourceLine, sourceMemberName);
                 foreach (string line in ex.StackTrace.Split(Environment.NewLine))
                 {
-                    Critical($"{prefix}{indent}  {line}");
+                    WriteCritical($"{prefix}{indent}  {line}", sourceFileName, sourceLine, sourceMemberName);
                 }
             }
 
             if (ex.TargetSite != null)
             {
-                Critical($"{prefix}{indent}TargetSite: {ex.TargetSite}");
+                WriteCritical($"{prefix}{indent}TargetSite: {ex.TargetSite}", sourceFileName, sourceLine, sourceMemberName);
             }
 
             if (ex.InnerException != null)
             {
-                Critical($"{prefix}{indent}--- Inner Exception ---");
+                WriteCritical($"{prefix}{indent}--- Inner Exception ---", sourceFileName, sourceLine, sourceMemberName);
                 ex = ex.InnerException;
                 depth = depth + 1;
                 continue;
