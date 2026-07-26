@@ -23,7 +23,7 @@ DEFAULT_LANG_DIR = os.path.join(
     os.path.dirname(__file__),
     "..",
     "source",
-    "MyCustomTemplate",
+    "MyCustomTemplate.GUI",
     "Resources",
     "Language",
 )
@@ -147,7 +147,7 @@ def main():
         "-l",
         "--lang-dir",
         default=DEFAULT_LANG_DIR,
-        help="Path to the language directory (default: ../source/MyCustomTemplate/Resources/Language)",
+        help="Path to the language directory (default: ../source/MyCustomTemplate.GUI/Resources/Language)",
     )
     args = parser.parse_args()
     setup_logging(args.verbose)

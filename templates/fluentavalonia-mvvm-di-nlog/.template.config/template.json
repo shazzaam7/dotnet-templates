@@ -48,7 +48,7 @@
       "modifiers": [
         {
           "condition": "(!IncludeNLog)",
-          "exclude": ["**/Logger/**", "**/nlog.config"]
+          "exclude": ["**/MyCustomTemplate.Logging/**", "**/nlog.config"]
         }
       ]
     },

@@ -9,25 +9,18 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Bun dependencies
-        run: |
-          bun init -y
-          bun add canvas
-
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: pip install Pillow
 
       - name: Generate translation progress data
         id: translation-data
@@ -39,8 +32,7 @@ jobs:
           echo "EOF" >> $env:GITHUB_OUTPUT
 
       - name: Generate translation chart
-        run: |
-          echo '${{ steps.translation-data.outputs.data }}' | bun run ./scripts/generate_translation_chart.js
+        run: python ./scripts/generate_translation_progress.py --chart
 
       - name: Check for chart changes
         id: git-check

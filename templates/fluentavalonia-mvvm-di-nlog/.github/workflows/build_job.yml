@@ -6,6 +6,10 @@ on:
         type: boolean
         required: true
         default: false
+      is_experimental:
+        type: boolean
+        required: false
+        default: false
     outputs:
       sha_short:
         value: ${{ jobs.build.outputs.sha_short }}
@@ -20,12 +24,12 @@ jobs:
       branch: ${{ steps.info.outputs.branch }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -52,11 +56,12 @@ jobs:
           dotnet publish -c Release -r win-x64 --self-contained false
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:ExperimentalBuild=${{ inputs.is_experimental }}
           -o publish/desktop
           source/MyCustomTemplate/MyCustomTemplate.csproj
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MyCustomTemplate
           path: publish/desktop/MyCustomTemplate.exe

@@ -8,13 +8,14 @@ to identify missing or extra translations.
 Automatically finds all .axaml language files and compares them against en.axaml.
 
 Usage:
-    python generate_translation_progress.py [--directory DIR] [--verbose] [--json]
+    python generate_translation_progress.py [--directory DIR] [--verbose] [--json] [--chart]
 
 Examples:
     python generate_translation_progress.py
-    python generate_translation_progress.py --directory "path\to\source\MyCustomTemplate\Resources\Language"
+    python generate_translation_progress.py --directory "path\to\source\MyCustomTemplate.GUI\Resources\Language"
     python generate_translation_progress.py --verbose
     python generate_translation_progress.py --json
+    python generate_translation_progress.py --chart
 """
 
 import argparse
@@ -26,6 +27,8 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
+
+from PIL import Image, ImageDraw, ImageFont
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +174,154 @@ def check_untranslated(
             untranslated.append(key)
 
     return untranslated
+
+
+LANGUAGE_NAMES = {
+    "en": "English",
+    # Add language code -> display name mappings here when adding new languages
+}
+
+
+def get_language_name(code: str) -> str:
+    return LANGUAGE_NAMES.get(code, code)
+
+
+def hsl_to_rgb(hue: float, saturation: float, lightness: float) -> Tuple[int, int, int]:
+    """Convert HSL values to RGB tuple (0-255)."""
+    hue = hue % 360
+    saturation = max(0, min(100, saturation)) / 100
+    lightness = max(0, min(100, lightness)) / 100
+
+    c = (1 - abs(2 * lightness - 1)) * saturation
+    x = c * (1 - abs((hue / 60) % 2 - 1))
+    m = lightness - c / 2
+
+    if hue < 60:
+        r1, g1, b1 = c, x, 0
+    elif hue < 120:
+        r1, g1, b1 = x, c, 0
+    elif hue < 180:
+        r1, g1, b1 = 0, c, x
+    elif hue < 240:
+        r1, g1, b1 = 0, x, c
+    elif hue < 300:
+        r1, g1, b1 = x, 0, c
+    else:
+        r1, g1, b1 = c, 0, x
+
+    return (int((r1 + m) * 255), int((g1 + m) * 255), int((b1 + m) * 255))
+
+
+def draw_rounded_rect(
+    draw: ImageDraw.ImageDraw,
+    xy: Tuple[int, int, int, int],
+    radius: int,
+    fill: Tuple[int, int, int],
+    outline: Tuple[int, int, int] = None,
+    width: int = 1,
+):
+    """Draw a rounded rectangle on an ImageDraw context."""
+    x0, y0, x1, y1 = xy
+    draw.rounded_rectangle(xy, radius=radius, fill=fill, outline=outline, width=width)
+
+
+def generate_chart(results: Dict[str, Dict], total_strings: int) -> None:
+    """Generate a translation progress bar chart using Pillow."""
+    width = 900
+    height = 600
+    img = Image.new("RGB", (width, height), (24, 26, 27))
+    draw = ImageDraw.Draw(img)
+
+    try:
+        font_bold_large = ImageFont.truetype("arialbd.ttf", 22)
+        font_regular = ImageFont.truetype("arial.ttf", 16)
+        font_bold_medium = ImageFont.truetype("arialbd.ttf", 14)
+        font_regular_medium = ImageFont.truetype("arial.ttf", 14)
+    except OSError:
+        try:
+            font_bold_large = ImageFont.truetype("Arial Bold.ttf", 22)
+            font_regular = ImageFont.truetype("Arial.ttf", 16)
+            font_bold_medium = ImageFont.truetype("Arial Bold.ttf", 14)
+            font_regular_medium = ImageFont.truetype("Arial.ttf", 14)
+        except OSError:
+            font_bold_large = ImageFont.load_default()
+            font_regular = ImageFont.load_default()
+            font_bold_medium = ImageFont.load_default()
+            font_regular_medium = ImageFont.load_default()
+
+    chart_left = 80
+    chart_right = width - 40
+    chart_top = 80
+    chart_bottom = height - 60
+    chart_width = chart_right - chart_left
+    chart_height = chart_bottom - chart_top
+
+    draw.text(
+        (width // 2, 35), "Translation Progress", fill=(255, 255, 255), font=font_bold_large, anchor="mm"
+    )
+    draw.text(
+        (width // 2, 55), f"Total strings to translate: {total_strings}", fill=(204, 204, 204), font=font_regular, anchor="mm"
+    )
+
+    y_label_text = "Completion Percentage (%)"
+    bbox = draw.textbbox((0, 0), y_label_text, font=font_bold_medium)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    y_label_img = Image.new("RGBA", (tw + 4, th + 4), (0, 0, 0, 0))
+    y_label_draw = ImageDraw.Draw(y_label_img)
+    y_label_draw.text((2, 2), y_label_text, fill=(255, 255, 255), font=font_bold_medium)
+    y_label_img = y_label_img.rotate(90, expand=True)
+    label_x = 20 - y_label_img.width // 2
+    label_y = chart_top + chart_height // 2 - y_label_img.height // 2
+    img.paste(y_label_img, (label_x, label_y), y_label_img)
+    draw.text(
+        (chart_left + chart_width // 2, height - 15), "Languages", fill=(255, 255, 255), font=font_bold_medium, anchor="mm"
+    )
+
+    sorted_langs = sorted(results.keys())
+    bar_count = len(sorted_langs)
+    bar_gap = 10
+    bar_width = (chart_width - (bar_count + 1) * bar_gap) // bar_count
+
+    for i in range(6):
+        y = chart_bottom - (i * chart_height // 5)
+        draw.line([(chart_left, y), (chart_right, y)], fill=(51, 51, 51), width=1)
+        label = str(i * 20)
+        draw.text((chart_left - 10, y), label, fill=(255, 255, 255), font=font_regular_medium, anchor="rm")
+
+    for index, lang in enumerate(sorted_langs):
+        r = results[lang]
+        percentage = r["percentage"]
+        translated = r["translated_count"]
+        bar_height = max(int((percentage / 100) * chart_height), 1)
+        x = chart_left + bar_gap + index * (bar_width + bar_gap)
+        y = chart_bottom - bar_height
+
+        hue = (index * 137.508) % 360
+        color = hsl_to_rgb(hue, 80, 55)
+
+        draw_rounded_rect(draw, (x, y, x + bar_width, chart_bottom), radius=6, fill=color, outline=(238, 238, 238), width=2)
+
+        if percentage > 15:
+            label = f"{translated}/{total_strings}"
+            draw.text(
+                (x + bar_width // 2, y + bar_height // 2), label, fill=(255, 255, 255), font=font_bold_medium, anchor="mm"
+            )
+        else:
+            label = f"{percentage}%"
+            draw.text(
+                (x + bar_width // 2, y - 5), label, fill=(0, 0, 0), font=font_bold_medium, anchor="mb"
+            )
+
+        lang_name = get_language_name(lang)
+        draw.text(
+            (x + bar_width // 2, chart_bottom + 20), lang_name, fill=(255, 255, 255), font=font_regular_medium, anchor="mm"
+        )
+
+    output_dir = Path("assets")
+    output_dir.mkdir(exist_ok=True)
+    output_path = output_dir / "translation-progress.png"
+    img.save(output_path, "PNG")
+    print(f"Translation chart generated: {output_path}")
 
 
 def print_summary(
@@ -355,6 +506,11 @@ def main():
         help="Output progress as JSON (for workflow/chart generation)",
     )
     parser.add_argument(
+        "--chart",
+        action="store_true",
+        help="Generate translation progress bar chart as PNG",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="Enable debug logging",
@@ -375,10 +531,10 @@ def main():
         # Try to find the directory relative to the script
         script_dir = Path(__file__).parent
         possible_dirs = [
-            script_dir.parent / "source" / "MyCustomTemplate" / "Resources" / "Language",
+            script_dir.parent / "source" / "MyCustomTemplate.GUI" / "Resources" / "Language",
             script_dir.parent.parent
             / "source"
-            / "MyCustomTemplate"
+            / "MyCustomTemplate.GUI"
             / "Resources"
             / "Language",
         ]
@@ -500,6 +656,10 @@ def main():
             print(f"{div}")
             print("RESULT: FAILED - Missing translation keys detected")
             print(div)
+
+    # Generate chart if requested
+    if args.chart:
+        generate_chart(results, total_strings)
 
     # Always exit successfully - this script is for reporting progress only
     sys.exit(0)

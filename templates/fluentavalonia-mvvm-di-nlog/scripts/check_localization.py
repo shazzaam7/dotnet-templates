@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Localization Checker Script
+
 Extracts keys from en.axaml and checks which ones are used in code files.
 Also detects hardcoded text in AXAML files that should be localized.
 """
@@ -14,7 +15,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SOURCE_PATH = Path("source")
-LANGUAGE_FILE = SOURCE_PATH / "MyCustomTemplate" / "Resources" / "Language" / "en.axaml"
+LANGUAGE_FILE = SOURCE_PATH / "MyCustomTemplate.GUI" / "Resources" / "Language" / "en.axaml"
 IGNORE_FOLDERS = {"Resources", "obj", "bin"}
 
 DYNAMIC_RESOURCE_PATTERN = re.compile(r"\{DynamicResource\s+([^}]+)\}")

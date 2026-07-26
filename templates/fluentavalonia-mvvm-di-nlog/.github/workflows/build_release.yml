@@ -11,6 +11,11 @@ on:
         required: false
         type: boolean
         default: false
+      experimental:
+        description: "Build with experimental features enabled"
+        required: false
+        type: boolean
+        default: false
   pull_request:
     types: [closed]
   push:
@@ -23,7 +28,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check localization keys
         run: python scripts/check_localization.py
@@ -45,6 +50,7 @@ jobs:
     uses: ./.github/workflows/build_job.yml
     with:
       is_stable: false
+      is_experimental: ${{ inputs.experimental || false }}
 
   build_stable:
     needs: [check_localization, update_translation_progress]
