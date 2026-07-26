@@ -1,83 +1,73 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia;
-using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
-using MyCustomTemplate.Core.Logging;
+using MyCustomTemplate.Logging;
 using MyCustomTemplate.Core.Models;
+using MyCustomTemplate.Core.Models.Items;
 
 namespace MyCustomTemplate.Services;
 
 /// <summary>
-/// Service responsible for managing and applying themes to the application
+/// Applies and caches application themes on top of FluentAvalonia 3 (Avalonia 12).
 /// </summary>
+/// <remarks>
+/// <para>
+/// FluentAvalonia only ships Light/Dark palettes out of the box, so Dark, AMOLED and Steam
+/// are implemented here as custom <see cref="ResourceDictionary"/> overrides merged into
+/// <c>Application.Current.Resources</c>. <see cref="Theme.System"/> removes the override
+/// entirely and falls back to FluentAvalonia's own palette via
+/// <see cref="FluentAvaloniaTheme.PreferSystemTheme"/>.
+/// </para>
+/// <para>
+/// Order of operations matters: the resource dictionary is swapped in <em>before</em>
+/// <c>RequestedThemeVariant</c> is changed. Avalonia only re-queries <c>ThemeResource</c>
+/// bindings on FluentAvalonia controls once <c>ActualThemeVariantChanged</c> fires, so the
+/// override dictionary needs to already be present when that happens.
+/// </para>
+/// <para>
+/// Parsed dictionaries are cached per-theme (<see cref="_loadedDictionaries"/>) so switching
+/// back to a previously used theme skips XAML parsing. Only one dictionary is merged in at a
+/// time (<see cref="_activeDictionary"/>), and it's added/removed as a single unit via
+/// <c>MergedDictionaries</c> rather than key-by-key, so a theme switch triggers one
+/// resource-changed pass instead of one per resource key.
+/// </para>
+/// </remarks>
 public class ThemeService
 {
-    // Fields
-    /// <summary>
-    /// The currently applied theme
-    /// </summary>
-    private Theme _currentTheme = Theme.Dark;
+    private Theme _currentTheme = Theme.Light;
 
     /// <summary>
-    /// The FluentAvalonia theme instance from the application styles
+    /// Cache of parsed theme resource dictionaries, keyed by theme. Populated lazily on first
+    /// use so repeat switches to the same theme don't reparse XAML.
     /// </summary>
+    private readonly Dictionary<Theme, ResourceDictionary> _loadedDictionaries = new Dictionary<Theme, ResourceDictionary>();
+
+    /// <summary>
+    /// The theme dictionary currently merged into <c>Application.Current.Resources</c>, or
+    /// <see langword="null"/> when the current theme is <see cref="Theme.System"/>.
+    /// </summary>
+    private ResourceDictionary? _activeDictionary;
+
+    private ReadOnlyObservableCollection<ThemeDisplayItem>? _themeDisplayItems;
+
     private FluentAvaloniaTheme? _faTheme;
 
     /// <summary>
-    /// Loaded theme resource dictionaries keyed by theme
+    /// Available themes for display in UI dropdowns, sorted and localized.
     /// </summary>
-    private readonly Dictionary<Theme, ResourceInclude?> _themeResources = new Dictionary<Theme, ResourceInclude?>();
+    public ReadOnlyObservableCollection<ThemeDisplayItem> ThemeDisplayItems => _themeDisplayItems ??= CreateThemeDisplayItems();
 
     /// <summary>
-    /// Configuration for each available theme, including base variant and resource paths
-    /// </summary>
-    private readonly Dictionary<Theme, ThemeConfiguration> _themeConfigs = new Dictionary<Theme, ThemeConfiguration>
-    {
-        [Theme.Light] = new ThemeConfiguration
-        {
-            BaseTheme = ThemeVariant.Light,
-            ResourcePath = "avares://MyCustomTemplate/Resources/Theme/Light.axaml",
-            FallbackTheme = null
-        },
-        [Theme.Dark] = new ThemeConfiguration
-        {
-            BaseTheme = ThemeVariant.Dark,
-            ResourcePath = "avares://MyCustomTemplate/Resources/Theme/Dark.axaml",
-            FallbackTheme = null
-        }
-        // New themes need to be added here
-    };
-
-    /// <summary>
-    /// Configuration for a single theme variant
-    /// </summary>
-    private class ThemeConfiguration
-    {
-        /// <summary>
-        /// The base Avalonia theme variant (Light/Dark)
-        /// </summary>
-        public ThemeVariant? BaseTheme { get; set; }
-
-        /// <summary>
-        /// The path to the theme resource dictionary
-        /// </summary>
-        public string? ResourcePath { get; set; }
-
-        /// <summary>
-        /// The fallback theme to use if loading this theme fails
-        /// </summary>
-        public Theme? FallbackTheme { get; set; }
-    }
-
-    // Constructor
-    /// <summary>
-    /// Initializes the ThemeService and configures all available themes
+    /// Locates and caches the app's <see cref="FluentAvaloniaTheme"/> style instance.
     /// </summary>
     public ThemeService()
     {
-        // Find FluentAvalonia Theme in Application Styles
         if (Application.Current == null)
         {
             return;
@@ -89,127 +79,152 @@ public class ThemeService
             {
                 continue;
             }
+
             _faTheme = faTheme;
             break;
         }
     }
 
-    // Properties
     /// <summary>
-    /// Sets the current application theme
+    /// Builds the localized, sorted list of themes exposed via <see cref="ThemeDisplayItems"/>.
     /// </summary>
-    /// <param name="theme">The theme to apply</param>
-    public void SetTheme(Theme theme)
+    private ReadOnlyObservableCollection<ThemeDisplayItem> CreateThemeDisplayItems()
     {
-        if (!_themeConfigs.ContainsKey(theme))
+        ObservableCollection<ThemeDisplayItem> items = new ObservableCollection<ThemeDisplayItem>();
+        List<Theme> themes = new List<Theme>((Theme[])Enum.GetValues(typeof(Theme)));
+        themes.Sort();
+
+        foreach (Theme theme in themes)
         {
-            AppLogger.Error($"Theme {theme} is not configured");
-            return;
+            items.Add(new ThemeDisplayItem
+            {
+                DisplayName = LocalizationService.GetText($"SettingsPage.Ui.Theme.Option.{theme}"),
+                ThemeValue = theme
+            });
         }
 
+        _themeDisplayItems = new ReadOnlyObservableCollection<ThemeDisplayItem>(items);
+        return _themeDisplayItems;
+    }
+
+    /// <summary>
+    /// Applies <paramref name="theme"/> and remembers it as the current theme.
+    /// </summary>
+    /// <param name="theme">The theme to switch to.</param>
+    public void SetTheme(Theme theme)
+    {
         AppLogger.Info($"Switching to {theme} theme");
-
-        // Remove the previously loaded theme and apply the new theme
-        RemoveCurrentThemeResources();
         ApplyTheme(theme);
-
         _currentTheme = theme;
     }
 
     /// <summary>
-    /// Applies the specified theme by setting the base theme variant and loading theme resources
+    /// Swaps in the resource dictionary for <paramref name="theme"/>, then updates
+    /// FluentAvalonia's theme variant / system-theme preference to match.
     /// </summary>
-    /// <param name="theme">The theme to apply</param>
     private void ApplyTheme(Theme theme)
     {
-        if (!_themeConfigs.TryGetValue(theme, out ThemeConfiguration? config))
+        FluentAvaloniaTheme? faTheme = _faTheme
+                                       ?? Application.Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
+
+        if (faTheme == null)
         {
-            AppLogger.Error($"No configuration found for theme {theme}");
+            AppLogger.Error("FluentAvaloniaTheme not found, cannot apply theme");
             return;
         }
 
-        if (config.BaseTheme != null && Application.Current != null)
+        // Resources first: ActualThemeVariantChanged (fired below) is what makes FluentAvalonia
+        // controls re-query their ThemeResource bindings, so the override must already be merged
+        // in by the time that happens.
+        SwapDictionary(theme);
+
+        if (theme == Theme.System)
         {
-            Application.Current.RequestedThemeVariant = config.BaseTheme;
+            faTheme.PreferSystemTheme = true;
+        }
+        else
+        {
+            faTheme.PreferSystemTheme = false;
+            ThemeVariant targetVariant = theme == Theme.Light ? ThemeVariant.Light : ThemeVariant.Dark;
+
+            // Avalonia only raises ActualThemeVariantChanged when RequestedThemeVariant actually
+            // changes value. Dark, AMOLED and Steam all map to ThemeVariant.Dark, so switching
+            // between them needs a toggle-away-and-back to force the event. A genuine variant
+            // change (e.g. Light -> Dark) doesn't need the toggle, so it's skipped in that case.
+            if (Application.Current!.RequestedThemeVariant == targetVariant)
+            {
+                Application.Current.RequestedThemeVariant = targetVariant == ThemeVariant.Light
+                    ? ThemeVariant.Dark
+                    : ThemeVariant.Light;
+            }
+            Application.Current.RequestedThemeVariant = targetVariant;
         }
 
-        if (!string.IsNullOrEmpty(config.ResourcePath))
-        {
-            LoadThemeResources(theme, config.ResourcePath, config.FallbackTheme);
-        }
+        AppLogger.Debug($"ApplyTheme complete, variant={Application.Current?.ActualThemeVariant}");
     }
 
     /// <summary>
-    /// Loads the theme resources from the specified resource path
+    /// Detaches the active theme dictionary (if any) and merges in the dictionary for
+    /// <paramref name="theme"/>, loading it from XAML and caching it on first use.
     /// </summary>
-    /// <param name="theme">The theme to load resources for</param>
-    /// <param name="resourcePath">The path to the theme resource file</param>
-    /// <param name="fallbackTheme">The fallback theme to use if loading fails</param>
-    private void LoadThemeResources(Theme theme, string resourcePath, Theme? fallbackTheme)
+    /// <remarks>
+    /// Detach and attach are each a single <c>MergedDictionaries</c> operation, so a theme
+    /// switch fires one resource-changed pass total rather than one per resource key.
+    /// </remarks>
+    private void SwapDictionary(Theme theme)
     {
-        if (Application.Current == null)
+        if (_activeDictionary != null)
+        {
+            Application.Current!.Resources.MergedDictionaries.Remove(_activeDictionary);
+            AppLogger.Debug("Detached previously active theme dictionary");
+            _activeDictionary = null;
+        }
+
+        if (theme == Theme.System)
         {
             return;
         }
 
-        try
+        if (!_loadedDictionaries.TryGetValue(theme, out ResourceDictionary? dictionary))
         {
-            Uri uri = new Uri(resourcePath);
-            ResourceInclude resourceInclude = new ResourceInclude(uri)
+            string resourcePath = theme switch
             {
-                Source = uri
+                Theme.Dark => "avares://MyCustomTemplate/Resources/Theme/Dark.axaml",
+                _ => "avares://MyCustomTemplate/Resources/Theme/Light.axaml"
             };
 
-            _themeResources[theme] = resourceInclude;
-            Application.Current.Resources.MergedDictionaries.Add(resourceInclude);
-            AppLogger.Info($"Theme resources loaded for {theme}");
-        }
-        catch (Exception ex)
-        {
-            AppLogger.Error($"Failed to load theme resources for {theme}: {ex.Message}");
-            if (fallbackTheme != null)
+            try
             {
-                AppLogger.Warning($"Falling back to {fallbackTheme.Value} theme");
-                ApplyTheme(fallbackTheme.Value);
+                dictionary = (ResourceDictionary)AvaloniaXamlLoader.Load(new Uri(resourcePath));
+                _loadedDictionaries[theme] = dictionary;
+                AppLogger.Debug($"Loaded and cached theme resources for {theme}");
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error($"Failed to load theme resources for {theme}: {ex.Message}");
+                return;
             }
         }
+        else
+        {
+            AppLogger.Debug($"Reusing cached theme resources for {theme}");
+        }
+
+        Application.Current!.Resources.MergedDictionaries.Add(dictionary);
+        _activeDictionary = dictionary;
+        AppLogger.Info($"Applied theme resources for {theme}");
     }
 
     /// <summary>
-    /// Removes all currently loaded theme resources from the application
+    /// The currently applied theme.
     /// </summary>
-    private void RemoveCurrentThemeResources()
-    {
-        if (Application.Current == null)
-        {
-            return;
-        }
-
-        foreach (KeyValuePair<Theme, ResourceInclude?> kvp in _themeResources)
-        {
-            if (kvp.Value == null)
-            {
-                continue;
-            }
-            Application.Current.Resources.MergedDictionaries.Remove(kvp.Value);
-            AppLogger.Debug($"Removed theme resources for {kvp.Key}");
-        }
-
-        _themeResources.Clear();
-    }
-
-    /// <summary>
-    /// Gets the currently applied theme
-    /// </summary>
-    /// <returns>The current theme</returns>
     public Theme GetCurrentTheme() => _currentTheme;
 
     /// <summary>
-    /// Gets a collection of all available themes
+    /// All themes defined on the <see cref="Theme"/> enum.
     /// </summary>
-    /// <returns>An enumerable collection of available themes</returns>
     public IEnumerable<Theme> GetAvailableThemes()
     {
-        return _themeConfigs.Keys;
+        return (Theme[])Enum.GetValues(typeof(Theme));
     }
 }

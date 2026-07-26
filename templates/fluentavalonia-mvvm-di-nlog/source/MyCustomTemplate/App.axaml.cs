@@ -48,7 +48,11 @@ public partial class App : Application
             settingsService.SaveSettings();
 
             // Load Language
-            LocalizationService.LoadLanguage();
+            LocalizationService.LoadLanguage(settingsService.Settings.Ui.Language);
+
+            // Apply saved theme (must happen after Initialize() so FluentAvaloniaTheme is in Styles)
+            ThemeService themeService = Services.GetRequiredService<ThemeService>();
+            themeService.SetTheme(settingsService.Settings.Ui.Theme);
 
             // Get MainWindow
             AppLogger.Debug("Resolving MainWindow from services");

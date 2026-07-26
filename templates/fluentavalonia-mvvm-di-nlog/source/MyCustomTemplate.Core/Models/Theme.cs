@@ -1,17 +1,12 @@
 namespace MyCustomTemplate.Core.Models;
 
 /// <summary>
-/// Represents the visual theme of the application
+/// Themes supported by the app
 /// </summary>
 public enum Theme
 {
-    /// <summary>
-    /// Light mode theme
-    /// </summary>
+    System,
     Light,
-
-    /// <summary>
-    /// Dark mode theme
-    /// </summary>
     Dark
+    // Add new themes here
 }
