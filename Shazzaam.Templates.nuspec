@@ -7,7 +7,7 @@
     <authors>Shazzaam</authors>
     <description>
       Custom .NET templates for rapidly scaffolding applications with consistent architecture and best practices.
-      Includes templates for FluentAvalonia MVVM apps, Avalonia UI MVVM apps, and class libraries.
+      Includes FluentAvalonia MVVM templates with DI, custom logging, and NLog support.
     </description>
     <packageTypes>
       <packageType name="Template" />

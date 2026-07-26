@@ -6,9 +6,66 @@ Customized .NET templates for rapidly scaffolding applications with consistent a
 
 ## Available Templates
 
+### FluentAvalonia MVVM + DI
+
+A production-ready FluentAvalonia desktop application template with MVVM pattern, dependency injection, custom logging, and settings persistence.
+
+**Template ID:** `fluentavalonia-mvvm-di`
+
+#### Features
+
+- **FluentAvalonia UI 3.0** - Cross-platform desktop UI framework
+- **MVVM Pattern** - Using CommunityToolkit.Mvvm for reactive view models
+- **Dependency Injection** - Microsoft.Extensions.DependencyInjection for loose coupling
+- **Custom Logging** - Structured logging with file and console targets via separate Logging project
+- **Settings Persistence** - JSON-based settings with backup recovery and lenient deserialization
+- **Theme System** - Light/Dark/System themes with custom resource dictionary overrides
+- **Localization** - Multi-language support with untranslated-string fallback
+- **Clean Architecture** - Separated into GUI, Core, Logging, and Settings projects
+- **Unit Testing** - NUnit test project pre-configured
+- **Scripts** - Development utility scripts for localization, changelog generation, and translation progress
+- **GitHub Workflows** - Pre-configured CI/CD workflows with automated releases
+- **Issue Templates** - Pre-configured bug report, feature request, and help templates
+- **.NET 10** - Targets the latest .NET framework
+- **Nullable References** - Enabled for better code safety
+
+#### Project Structure
+
+```
+fluentavalonia-mvvm-di/
+├── source/
+│   ├── MyCustomTemplate.Core/        # Shared models, enums, utilities
+│   ├── MyCustomTemplate.GUI/         # Main Avalonia application
+│   │   ├── Controls/                 # Custom controls (splash screen, etc.)
+│   │   ├── Resources/                # Theme dictionaries, language files
+│   │   ├── Services/                 # Theme, localization, message box, notification services
+│   │   ├── ViewModels/               # MVVM ViewModels
+│   │   └── Views/                    # AXAML views
+│   ├── MyCustomTemplate.Logging/     # Custom logging infrastructure
+│   └── MyCustomTemplate.Settings/    # JSON-based settings persistence
+├── tests/
+│   └── MyCustomTemplate.Tests/       # Unit tests (NUnit)
+├── scripts/                          # Development scripts
+└── .github/                          # GitHub workflows & issue templates
+```
+
+#### Technologies Used
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| FluentAvaloniaUI | 3.0.2 | Fluent design system on Avalonia |
+| Avalonia | 12.1.0 | Cross-platform UI framework |
+| Avalonia.Desktop | 12.1.0 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.1.0 | Inter font family |
+| Avalonia.Themes.Fluent | 12.1.0 | Fluent theme |
+| AvaloniaUI.DiagnosticsSupport | 2.2.3 | Debug diagnostics (Debug only) |
+| CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
+| Microsoft.Extensions.DependencyInjection | 10.0.10 | Dependency injection container |
+| NUnit | 4.3.2 | Unit testing framework |
+
 ### FluentAvalonia MVVM + DI + NLog
 
-A production-ready FluentAvalonia desktop application template with MVVM pattern, dependency injection, and structured logging.
+A production-ready FluentAvalonia desktop application template with MVVM pattern, dependency injection, and NLog-based logging.
 
 **Template ID:** `fluentavalonia-mvvm-di-nlog`
 
@@ -17,14 +74,13 @@ A production-ready FluentAvalonia desktop application template with MVVM pattern
 - **FluentAvalonia UI 3.0** - Cross-platform desktop UI framework
 - **MVVM Pattern** - Using CommunityToolkit.Mvvm for reactive view models
 - **Dependency Injection** - Microsoft.Extensions.DependencyInjection for loose coupling
-- **NLog Logging** - Structured logging with file and console targets
+- **NLog Logging** - Structured logging with NLog (configurable, optional)
+- **Localization** - Multi-language support with untranslated-string fallback
 - **Clean Architecture** - Separated into UI and Core projects
 - **Unit Testing** - NUnit test project pre-configured
-- **Exception Handling** - Global exception handlers across all threads
-- **Localization Support** - Built-in language resource structure
-- **Scripts** - Development utility scripts for localization, translation progress, and changelog generation
+- **Scripts** - Development utility scripts for localization, changelog generation, translation progress, and translation charts
 - **GitHub Workflows** - Pre-configured CI/CD workflows with automated releases
-- **Issue Templates** - Pre-configured bug report and feature request templates
+- **Issue Templates** - Pre-configured bug report, feature request, and help templates
 - **.NET 10** - Targets the latest .NET framework
 - **Nullable References** - Enabled for better code safety
 
@@ -33,108 +89,34 @@ A production-ready FluentAvalonia desktop application template with MVVM pattern
 ```
 fluentavalonia-mvvm-di-nlog/
 ├── source/
-│   ├── MyCustomTemplate/           # UI Layer (FluentAvalonia)
-│   │   ├── Views/                  # Avalonia views
-│   │   ├── ViewModels/             # MVVM view models
-│   │   ├── Services/               # Service configuration & DI
-│   │   ├── Resources/              # Localization & assets
-│   │   ├── App.axaml(.cs)          # Application entry & config
-│   │   └── Program.cs              # Application bootstrap
-│   └── MyCustomTemplate.Core/      # Core Layer (Business Logic)
-│       └── (Logging, models, etc.)
+│   ├── MyCustomTemplate/             # Main application
+│   └── MyCustomTemplate.Core/        # Core business logic (packages, logging config)
 ├── tests/
-│   └── MyCustomTemplate.Tests/     # Unit tests (NUnit)
-├── scripts/                    # Development scripts
-└── .github/                 # GitHub workflows
+│   └── MyCustomTemplate.Tests/       # Unit tests (NUnit)
+├── scripts/                          # Development scripts
+└── .github/                          # GitHub workflows & issue templates
 ```
 
 #### Technologies Used
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| FluentAvalonia | 3.0.0 | Cross-platform UI framework |
-| Avalonia | 12.0.5 | UI framework |
-| Avalonia.Desktop | 12.0.5 | Desktop platform support |
-| Avalonia.Fonts.Inter | 12.0.5 | Inter font family |
-| Avalonia.Themes.Fluent | 12.0.5 | Fluent theme |
+| FluentAvaloniaUI | 3.0.1 | Fluent design system on Avalonia |
+| Avalonia | 12.1.0 | Cross-platform UI framework |
+| Avalonia.Desktop | 12.1.0 | Desktop platform support |
+| Avalonia.Fonts.Inter | 12.1.0 | Inter font family |
+| Avalonia.Themes.Fluent | 12.1.0 | Fluent theme |
+| AvaloniaUI.DiagnosticsSupport | 2.2.3 | Debug diagnostics |
 | CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
 | Microsoft.Extensions.DependencyInjection | 10.0.9 | Dependency injection container |
-| NLog | 6.1.3 | Structured logging |
+| NLog | 6.1.4 | Structured logging framework |
 | NUnit | 4.6.1 | Unit testing framework |
 
-### Avalonia MVVM + DI + NLog
-
-A production-ready Avalonia UI desktop application template with MVVM pattern, dependency injection, and structured logging.
-
-**Template ID:** `avalonia-mvvm-di-nlog`
-
-#### Features
-
-- **Avalonia UI 12.0** - Cross-platform desktop UI framework
-- **MVVM Pattern** - Using CommunityToolkit.Mvvm for reactive view models
-- **Dependency Injection** - Microsoft.Extensions.DependencyInjection for loose coupling
-- **NLog Logging** - Structured logging with file and console targets
-- **Clean Architecture** - Separated into UI and Core projects
-- **Unit Testing** - NUnit test project pre-configured
-- **Exception Handling** - Global exception handlers across all threads
-- **Localization Support** - Built-in language resource structure
-- **Scripts** - Development utility scripts
-- **.NET 10** - Targets the latest .NET framework
-- **Nullable References** - Enabled for better code safety
-
-#### Technologies Used
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| Avalonia | 12.0.5 | UI framework |
-| Avalonia.Desktop | 12.0.5 | Desktop platform support |
-| Avalonia.Fonts.Inter | 12.0.5 | Inter font family |
-| Avalonia.Themes.Fluent | 12.0.5 | Fluent theme |
-| CommunityToolkit.Mvvm | 8.4.2 | MVVM helpers & source generators |
-| Microsoft.Extensions.DependencyInjection | 10.0.9 | Dependency injection container |
-| NLog | 6.1.3 | Structured logging |
-| NUnit | 4.6.1 | Unit testing framework |
-
-### Custom Core Library
-
-A customizable class library template with built-in NLog logging, settings management, and utility helpers for building robust applications.
-
-**Template ID:** `custom-core-library`
-
-#### Features
-
-- **NLog Logging** - Structured logging with console and file targets
-- **Settings Management** - JSON-based settings with backup/recovery
-- **Path Resolution** - Cross-platform path utilities
-- **.NET 10** - Targets the latest .NET framework
-- **Nullable References** - Enabled for better code safety
-- **Logging Levels** - Dynamic log level control at runtime
-
-#### Project Structure
-
-```
-custom-core-library/
-└── MyCustomTemplate/
-    ├── Converters/                 # JSON converters for serialization
-    ├── Logging/                    # Static AppLogger class with NLog
-    ├── Settings/                  # Settings model and service
-    │   └── Sections/              # Settings sections (debug, etc.)
-    ├── Utilities/                # Path resolvers and helpers
-    └── MyCustomTemplate.csproj    # Project file
-```
-
-#### Technologies Used
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| NLog | 6.1.3 | Structured logging |
-
-#### Installation
+## Installation
 
 ### Install from NuGet Package (Recommended)
 
 ```bash
-# Install all templates from the latest NuGet package
 dotnet new install Shazzaam.DotNetTemplates
 ```
 
@@ -142,13 +124,10 @@ dotnet new install Shazzaam.DotNetTemplates
 
 ```bash
 # Install the FluentAvalonia template
+dotnet new install templates/fluentavalonia-mvvm-di
+
+# Install the FluentAvalonia NLog template
 dotnet new install templates/fluentavalonia-mvvm-di-nlog
-
-# Install the Avalonia template
-dotnet new install templates/avalonia-mvvm-di-nlog
-
-# Install the Custom Core Library template
-dotnet new install templates/custom-core-library
 ```
 
 ## Usage
@@ -156,13 +135,13 @@ dotnet new install templates/custom-core-library
 ### Create a New FluentAvalonia Project
 
 ```bash
-dotnet new fluentavalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
+dotnet new fluentavalonia-mvvm-di -n MyNewApp -o ./MyNewApp
 ```
 
-### Create a New Avalonia Project
+### Create a New FluentAvalonia NLog Project
 
 ```bash
-dotnet new avalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
+dotnet new fluentavalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
 ```
 
 ### Template Parameters
@@ -176,10 +155,7 @@ dotnet new avalonia-mvvm-di-nlog -n MyNewApp -o ./MyNewApp
 
 ```bash
 # Create a new FluentAvalonia app with DI and logging
-dotnet new fluentavalonia-mvvm-di-nlog -n MyApp -o ./src/MyApp
-
-# Create a new Avalonia app with DI and logging
-dotnet new avalonia-mvvm-di-nlog -n MyApp -o ./src/MyApp
+dotnet new fluentavalonia-mvvm-di -n MyApp -o ./src/MyApp
 
 # Navigate and build
 cd ./src/MyApp
@@ -187,31 +163,32 @@ dotnet build
 dotnet run
 ```
 
-### Create a Custom Core Library
-
-```bash
-# Create a new core library
-dotnet new custom-core-library -n MyApp.Core -o ./MyApp.Core
-
-# Navigate and build
-cd ./MyApp.Core
-dotnet build
-```
-
 ### Scripts
 
-The template includes scripts in the `scripts/` folder. Some require updates after project creation:
+The templates include scripts in the `scripts/` folder. Some require updates after project creation:
+
+#### fluentavalonia-mvvm-di
 
 | Script | File | Update Required |
 |--------|------|-----------------|
-| Check localization | `scripts/check_localization.py` | Update project folder path if different from `MyCustomTemplate` (line 17) |
-| Generate changelog | `scripts/generate_changelog.py` | Update `REPOSITORY` to `username/repo` (line 30) |
-| Generate translation progress | `scripts/generate_translation_progress.py` | Update project folder paths (lines 15, 378, 381) |
+| Check localization | `scripts/check_localization.py` | Update project folder path if different from `MyCustomTemplate` |
+| Generate changelog | `scripts/generate_changelog.py` | Update `REPOSITORY` to `username/repo` |
+| Generate translation progress | `scripts/generate_translation_progress.py` | Update project folder paths |
+| Sync localization | `scripts/sync_localization.py` | No changes needed |
+
+#### fluentavalonia-mvvm-di-nlog
+
+| Script | File | Update Required |
+|--------|------|-----------------|
+| Check localization | `scripts/check_localization.py` | Update project folder path if different from `MyCustomTemplate` |
+| Generate changelog | `scripts/generate_changelog.py` | Update `REPOSITORY` to `username/repo` |
+| Generate translation progress | `scripts/generate_translation_progress.py` | Update project folder paths |
 | Generate translation chart | `scripts/generate_translation_chart.js` | No changes needed |
+| Sync localization | `scripts/sync_localization.py` | No changes needed |
 
 ### GitHub Workflows
 
-The template includes GitHub Actions workflows in `.github/workflows/`:
+Both templates include GitHub Actions workflows in `.github/workflows/`:
 
 | Workflow | Trigger | Description |
 |----------|---------|-------------|
@@ -230,35 +207,42 @@ Review and update as needed for your project:
 
 ### Issue Templates
 
-The template includes issue templates in `.github/ISSUE_TEMPLATE/`. Review and update as needed for your project.
+Both templates include issue templates in `.github/ISSUE_TEMPLATE/`. Review and update as needed for your project.
 
 ## Development
 
-### Building the Template
+### Building the Templates
 
 ```bash
-cd templates/avalonia-mvvm-di-nlog
+# FluentAvalonia template
+cd templates/fluentavalonia-mvvm-di
+dotnet build
+
+# FluentAvalonia NLog template
+cd templates/fluentavalonia-mvvm-di-nlog
 dotnet build
 ```
 
 ### Running Tests
 
 ```bash
-cd templates/avalonia-mvvm-di-nlog
+# FluentAvalonia template
+cd templates/fluentavalonia-mvvm-di
+dotnet test
+
+# FluentAvalonia NLog template
+cd templates/fluentavalonia-mvvm-di-nlog
 dotnet test
 ```
 
-### Uninstalling the Template
+### Uninstalling the Templates
 
 ```bash
 # Uninstall FluentAvalonia template
+dotnet new uninstall fluentavalonia-mvvm-di
+
+# Uninstall FluentAvalonia NLog template
 dotnet new uninstall fluentavalonia-mvvm-di-nlog
-
-# Uninstall Avalonia template
-dotnet new uninstall avalonia-mvvm-di-nlog
-
-# Uninstall Custom Core Library template
-dotnet new uninstall custom-core-library
 ```
 
 ## Architecture
@@ -283,12 +267,18 @@ public static IServiceProvider ConfigureServices()
 
 ### Logging
 
-NLog is integrated through the Core layer with a static `AppLogger` class providing:
+**fluentavalonia-mvvm-di** provides custom logging through a separate `MyCustomTemplate.Logging` project:
 
-- Trace, Debug, Info, Warn, Error, Fatal levels
-- Exception detail logging
-- Log flushing and shutdown
+- Trace, Debug, Info, Warning, Error, Critical levels
+- Exception detail logging with system information
+- Colored console output and file logging
 - Global exception handling
+
+**fluentavalonia-mvvm-di-nlog** uses NLog for structured logging:
+
+- Configurable via `nlog.config`
+- Console and file targets
+- Per-category loggers
 
 ### Localization
 
