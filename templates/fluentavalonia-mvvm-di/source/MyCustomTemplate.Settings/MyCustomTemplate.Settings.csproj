@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MyCustomTemplate.Core\MyCustomTemplate.Core.csproj" />
+      <ProjectReference Include="..\MyCustomTemplate.Logging\MyCustomTemplate.Logging.csproj" />
+    </ItemGroup>
+
+</Project>

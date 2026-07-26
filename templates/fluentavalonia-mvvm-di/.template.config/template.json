@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Shazzaam",
+  "classifications": ["Desktop", "Xaml", "FluentAvalonia", "MVVM", "DI", "Windows", "Linux"],
+  "description": "A cross-platform FluentAvalonia UI Application using MVVM pattern with built-in Dependency Injection and custom logging",
+  "groupIdentity": "Shazzaam.FluentAvalonia.MVVM.DI",
+  "identity": "Shazzaam.FluentAvalonia.MVVM.DI",
+  "name": "FluentAvalonia MVVM App with Dependency Injection, custom Logger and Localization",
+  "shortName": "fluentavalonia-mvvm-di",
+  "sourceName": "MyCustomTemplate",
+  "defaultName": "AvaloniaApp",
+  "preferNameDirectory": true,
+  "type": "project",
+  "tags": { "language": "C#" },
+  "symbols": {
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    },
+    "HostIdentifier": {
+      "type": "bind",
+      "binding": "HostIdentifier"
+    }
+  },
+  "sources": [
+    { "source": "./", "target": "./" },
+    { "source": "./scripts", "target": "./scripts" },
+    { "source": "./.github", "target": "./.github" },
+    { "source": "./docs", "target": "./docs" }
+  ],
+  "primaryOutputs": [
+    { "path": "MyCustomTemplate.sln" },
+    {
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")",
+      "path": "source/MyCustomTemplate.GUI/Views/MainWindow.axaml"
+    },
+    {
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")",
+      "path": "source/MyCustomTemplate.GUI/ViewModels/MainWindowViewModel.cs"
+    }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [{ "text": "Run 'dotnet restore'" }],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    },
+    {
+      "id": "editor",
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")",
+      "description": "Opens MainWindow and MainWindowViewModel in the editor",
+      "manualInstructions": [],
+      "actionId": "84C0DA21-51C8-4541-9940-6CA19AF04EE6",
+      "args": { "files": "1;2" },
+      "continueOnError": true
+    }
+  ]
+}

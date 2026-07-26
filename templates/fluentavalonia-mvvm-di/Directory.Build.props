@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <ExperimentalBuild>false</ExperimentalBuild>
+        <DefineConstants Condition="'$(ExperimentalBuild)' == 'true'">$(DefineConstants);EXPERIMENTAL_BUILD</DefineConstants>
+    </PropertyGroup>
+</Project>

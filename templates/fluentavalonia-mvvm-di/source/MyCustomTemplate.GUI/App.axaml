@@ -1,0 +1,11 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MyCustomTemplate.GUI.App"
+             xmlns:faStyle="using:FluentAvalonia.Styling"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Styles>
+        <faStyle:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="False" />
+    </Application.Styles>
+</Application>
