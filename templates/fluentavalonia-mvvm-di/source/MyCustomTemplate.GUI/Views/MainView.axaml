@@ -24,6 +24,16 @@
             </controls:FANavigationViewItem>
         </controls:FANavigationView.MenuItems>
 
+        <controls:FANavigationView.FooterMenuItems>
+            <!-- Settings page -->
+            <controls:FANavigationViewItem Content="{DynamicResource MainWindow.Settings}"
+                                           Tag="Settings">
+                <controls:FANavigationViewItem.IconSource>
+                    <ic:SymbolIconSource Symbol="Settings" />
+                </controls:FANavigationViewItem.IconSource>
+            </controls:FANavigationViewItem>
+        </controls:FANavigationView.FooterMenuItems>
+
         <!-- Hosts the active page; CacheSize=0 forces a fresh instance each navigation -->
         <controls:FAFrame x:Name="ContentFrame" CacheSize="0" />
     </controls:FANavigationView>

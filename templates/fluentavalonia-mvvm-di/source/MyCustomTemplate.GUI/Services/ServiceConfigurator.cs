@@ -33,6 +33,7 @@ public abstract class ServiceConfigurator
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<CardsTestPageViewModel>();
+        services.AddSingleton<SettingsPageViewModel>();
 
         // Views
         services.AddSingleton<MainWindow>();

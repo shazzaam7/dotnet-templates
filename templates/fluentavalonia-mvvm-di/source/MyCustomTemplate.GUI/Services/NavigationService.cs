@@ -57,6 +57,9 @@ public class NavigationService
             case "CardsTest":
                 frame?.Navigate(typeof(CardsTestPage));
                 break;
+            case "Settings":
+                frame?.Navigate(typeof(SettingsPage));
+                break;
         }
 
         UpdateSelection(tag);
@@ -65,11 +68,30 @@ public class NavigationService
 
     /// <summary>
     /// Sets IsSelected on the matching NavigationViewItem to keep the UI in sync.
+    /// Searches both <c>MenuItems</c> and <c>FooterMenuItems</c>.
     /// </summary>
     private void UpdateSelection(string tag)
     {
-        if (_navigationView == null) return;
-        foreach (object? item in _navigationView.MenuItems ?? Array.Empty<object>())
+        if (_navigationView == null)
+        {
+            return;
+        }
+
+        SetSelected(_navigationView.MenuItems, tag);
+        SetSelected(_navigationView.FooterMenuItems, tag);
+    }
+
+    /// <summary>
+    /// Iterates a collection of navigation items and sets <c>IsSelected</c>
+    /// on the one whose <c>Tag</c> matches the given tag string.
+    /// </summary>
+    private static void SetSelected(IList<object>? items, string tag)
+    {
+        if (items == null)
+        {
+            return;
+        }
+        foreach (object item in items)
         {
             if (item is FANavigationViewItem navItem)
             {
