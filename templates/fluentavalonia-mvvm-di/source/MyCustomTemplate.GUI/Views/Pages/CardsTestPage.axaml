@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MyCustomTemplate.GUI.ViewModels.Pages"
+             xmlns:cards="clr-namespace:MyCustomTemplate.GUI.Controls.Cards"
+             xmlns:fic="using:FluentIcons.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="MyCustomTemplate.GUI.Views.Pages.CardsTestPage"
+             x:DataType="vm:CardsTestPageViewModel">
+    <Design.DataContext>
+        <vm:CardsTestPageViewModel />
+    </Design.DataContext>
+    <ScrollViewer Margin="24">
+        <StackPanel Spacing="16">
+            <!-- Page heading -->
+            <TextBlock FontSize="20" FontWeight="Bold" Text="Card Controls Test" />
+
+            <!-- InfoBar notification demo button -->
+            <Button HorizontalAlignment="Left"
+                    Command="{Binding ShowNotificationCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="Show InfoBar Notification" />
+                </StackPanel>
+            </Button>
+
+            <!-- CustomCard: basic content wrapper with rounded border -->
+            <cards:CustomCard>
+                <TextBlock Text="This is a plain CustomCard wrapping this text." />
+            </cards:CustomCard>
+
+            <!-- CardHeader: icon + title + description + optional action area -->
+            <cards:CardHeader Title="CardHeader"
+                              Description="Icon, title, description and optional action area"
+                              Icon="Settings" ShowIconBackground="True">
+                <cards:CardHeader.ActionContent>
+                    <Button Content="Action" />
+                </cards:CardHeader.ActionContent>
+            </cards:CardHeader>
+
+            <!-- ToggleSwitchCard: boolean toggle bound to ToggleValue -->
+            <cards:ToggleSwitchCard Title="ToggleSwitchCard"
+                                    Description="Boolean toggle for settings"
+                                    Icon="{x:Static fic:Symbol.ToggleLeft}"
+                                    IsChecked="{Binding ToggleValue}" />
+
+            <!-- ComboBoxCard: dropdown selection bound to ComboItems / ComboIndex -->
+            <cards:ComboBoxCard Title="ComboBoxCard"
+                                Description="Pick an option from the list"
+                                Icon="{x:Static fic:Symbol.List}"
+                                ItemsSource="{Binding ComboItems}"
+                                SelectedIndex="{Binding ComboIndex}" />
+
+            <!-- TextBoxCard: free-text input bound to TextValue -->
+            <cards:TextBoxCard Title="TextBoxCard"
+                               Description="Enter some text"
+                               Icon="{x:Static fic:Symbol.Edit}"
+                               Text="{Binding TextValue}" />
+
+            <!-- SliderCard: range slider bound to SliderValue (0–100) -->
+            <cards:SliderCard Title="SliderCard"
+                              Description="Adjust a numeric value"
+                              Icon="{x:Static fic:Symbol.Settings}"
+                              Minimum="0" Maximum="100"
+                              Value="{Binding SliderValue}"
+                              ValueFormat="F0" />
+
+            <!-- NumberBoxCard: numeric input bound to NumberValue (0–1000) -->
+            <cards:NumberBoxCard Title="NumberBoxCard"
+                                 Description="Set a precise numeric value"
+                                 Icon="{x:Static fic:Symbol.NumberSymbol}"
+                                 Minimum="0" Maximum="1000"
+                                 Value="{Binding NumberValue}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

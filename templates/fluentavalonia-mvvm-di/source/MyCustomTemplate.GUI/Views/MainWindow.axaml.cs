@@ -10,13 +10,8 @@ namespace MyCustomTemplate.GUI.Views;
 /// </summary>
 public partial class MainWindow : FAAppWindow
 {
-    // Fields
-    /// <summary>
-    /// The view model bound to this window
-    /// </summary>
     private MainWindowViewModel _viewModel { get; set; }
 
-    // Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="MainWindow"/> class
     /// </summary>

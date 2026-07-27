@@ -8,7 +8,6 @@ namespace MyCustomTemplate.GUI.ViewModels;
 /// </summary>
 public partial class MainWindowViewModel : ObservableObject
 {
-    // Properties
     /// <summary>
     /// The title displayed in the main window title bar
     /// </summary>
