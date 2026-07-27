@@ -11,11 +11,14 @@ public partial class CardsTestPage : UserControl
 {
     private CardsTestPageViewModel _viewModel { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CardsTestPage"/> class.
+    /// Resolves <see cref="CardsTestPageViewModel"/> from the DI container and assigns it as the data context.
+    /// </summary>
     public CardsTestPage()
     {
         InitializeComponent();
 
-        // Resolve the ViewModel from DI and assign it as the data context
         _viewModel = App.Services.GetRequiredService<CardsTestPageViewModel>();
         DataContext = _viewModel;
     }

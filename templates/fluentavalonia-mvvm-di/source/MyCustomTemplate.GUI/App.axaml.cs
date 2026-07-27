@@ -6,9 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MyCustomTemplate.GUI.Services;
-using MyCustomTemplate.GUI.ViewModels;
 using MyCustomTemplate.GUI.Views;
 using MyCustomTemplate.Logging;
 using MyCustomTemplate.Settings;
@@ -19,39 +17,52 @@ namespace MyCustomTemplate.GUI;
 public partial class App : Application
 {
     /// <summary>
-    /// Desktop instance
+    /// Gets the desktop application lifetime, or <c>null</c> if not running as a desktop app.
     /// </summary>
+    /// <remarks>
+    /// Provides access to desktop-specific functionality such as the main window and
+    /// shutdown modes. Initialized during <see cref="OnFrameworkInitializationCompleted"/>.
+    /// </remarks>
     public static readonly IClassicDesktopStyleApplicationLifetime? Desktop = Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
 
     /// <summary>
-    /// Main Window instance
+    /// Gets the main application window, or <c>null</c> if not running as a desktop app.
     /// </summary>
     public static Window? MainWindow => Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
 
     /// <summary>
-    /// DI Services
+    /// Gets the dependency injection service provider for the application.
     /// </summary>
+    /// <remarks>
+    /// Configured once at static initialization time via <see cref="ServiceConfigurator.ConfigureServices"/>.
+    /// All application services should be resolved from this provider.
+    /// </remarks>
     public static IServiceProvider Services { get; private set; } = ServiceConfigurator.ConfigureServices();
 
     /// <summary>
-    /// Logger
+    /// Logger instance for application-level events.
     /// </summary>
     private static readonly MyCustomTemplateLogger _log = MyCustomTemplateLogger.For("App");
 
+    /// <summary>
+    /// Loads the XAML resources for this application.
+    /// </summary>
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
     }
 
+    /// <summary>
+    /// Called when the Avalonia framework has completed initialization.
+    /// Configures logging, localization, theme, global exception handlers, and creates the main window.
+    /// </summary>
     public override void OnFrameworkInitializationCompleted()
     {
         if (Desktop is { } desktop)
         {
-            // Initialize settings
             SettingsService settingsService = Services.GetRequiredService<SettingsService>();
             _ = settingsService.Settings;
 
-            // Initialize Logger
             LogLevel logLevel = settingsService.Settings.Debug.LogLevel;
             MyCustomTemplateLogger.Configure(logLevel,
                 new CompositeLogSink(
@@ -60,20 +71,14 @@ public partial class App : Application
                 )
             );
 
-            // Startup diagnostics banner
             BuildInfo.LogStartupBanner(_log);
-
-            // Global exception handlers
             RegisterGlobalExceptionHandlers();
 
-            // Localization
             LocalizationService.LoadLanguage(settingsService.Settings.Ui.Language);
 
-            // Apply saved theme (must happen after Initialize() so FluentAvaloniaTheme is in Styles)
             ThemeService themeService = Services.GetRequiredService<ThemeService>();
             themeService.SetTheme(settingsService.Settings.Ui.Theme);
 
-            // MainWindow
             MainWindow mainWindow = Services.GetRequiredService<MainWindow>();
             desktop.MainWindow = mainWindow;
         }
@@ -82,7 +87,9 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Registers global exception handlers for unhandled exceptions
+    /// Registers global exception handlers for <see cref="TaskScheduler.UnobservedTaskException"/>,
+    /// <see cref="AppDomain.UnhandledException"/>, and <see cref="Dispatcher.UIThread.UnhandledException"/>.
+    /// All caught exceptions are logged via <see cref="MyCustomTemplateLogger.LogExceptionDetails"/>.
     /// </summary>
     private void RegisterGlobalExceptionHandlers()
     {

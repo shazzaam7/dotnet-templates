@@ -71,60 +71,70 @@ public class ComboBoxCard : ContentControl
         nameof(ComboBoxMinWidth),
         160.0);
 
+    /// <inheritdoc cref="TitleProperty"/>
     public string? Title
     {
         get => GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
+    /// <inheritdoc cref="DescriptionProperty"/>
     public string? Description
     {
         get => GetValue(DescriptionProperty);
         set => SetValue(DescriptionProperty, value);
     }
 
+    /// <inheritdoc cref="TooltipProperty"/>
     public string? Tooltip
     {
         get => GetValue(TooltipProperty);
         set => SetValue(TooltipProperty, value);
     }
 
+    /// <inheritdoc cref="IconProperty"/>
     public Symbol? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
 
+    /// <inheritdoc cref="ShowIconBackgroundProperty"/>
     public bool ShowIconBackground
     {
         get => GetValue(ShowIconBackgroundProperty);
         set => SetValue(ShowIconBackgroundProperty, value);
     }
 
+    /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <inheritdoc cref="SelectedItemProperty"/>
     public object? SelectedItem
     {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
     }
 
+    /// <inheritdoc cref="SelectedIndexProperty"/>
     public int SelectedIndex
     {
         get => GetValue(SelectedIndexProperty);
         set => SetValue(SelectedIndexProperty, value);
     }
 
+    /// <inheritdoc cref="ItemTemplateProperty"/>
     public DataTemplate? ItemTemplate
     {
         get => GetValue(ItemTemplateProperty);
         set => SetValue(ItemTemplateProperty, value);
     }
 
+    /// <inheritdoc cref="ComboBoxMinWidthProperty"/>
     public double ComboBoxMinWidth
     {
         get => GetValue(ComboBoxMinWidthProperty);

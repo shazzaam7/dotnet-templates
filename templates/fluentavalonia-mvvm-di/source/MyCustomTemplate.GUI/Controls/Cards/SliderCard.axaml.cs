@@ -85,78 +85,91 @@ public class SliderCard : ContentControl
         nameof(ValueFormat),
         "F0");
 
+    /// <inheritdoc cref="TitleProperty"/>
     public string? Title
     {
         get => GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
+    /// <inheritdoc cref="DescriptionProperty"/>
     public string? Description
     {
         get => GetValue(DescriptionProperty);
         set => SetValue(DescriptionProperty, value);
     }
 
+    /// <inheritdoc cref="TooltipProperty"/>
     public string? Tooltip
     {
         get => GetValue(TooltipProperty);
         set => SetValue(TooltipProperty, value);
     }
 
+    /// <inheritdoc cref="IconProperty"/>
     public Symbol? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
 
+    /// <inheritdoc cref="MinimumProperty"/>
     public double Minimum
     {
         get => GetValue(MinimumProperty);
         set => SetValue(MinimumProperty, value);
     }
 
+    /// <inheritdoc cref="MaximumProperty"/>
     public double Maximum
     {
         get => GetValue(MaximumProperty);
         set => SetValue(MaximumProperty, value);
     }
 
+    /// <inheritdoc cref="ValueProperty"/>
     public double Value
     {
         get => GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
     }
 
+    /// <inheritdoc cref="TickFrequencyProperty"/>
     public double TickFrequency
     {
         get => GetValue(TickFrequencyProperty);
         set => SetValue(TickFrequencyProperty, value);
     }
 
+    /// <inheritdoc cref="IsSnapToTickEnabledProperty"/>
     public bool IsSnapToTickEnabled
     {
         get => GetValue(IsSnapToTickEnabledProperty);
         set => SetValue(IsSnapToTickEnabledProperty, value);
     }
 
+    /// <inheritdoc cref="TickPlacementProperty"/>
     public TickPlacement TickPlacement
     {
         get => GetValue(TickPlacementProperty);
         set => SetValue(TickPlacementProperty, value);
     }
 
+    /// <inheritdoc cref="SliderMinWidthProperty"/>
     public double SliderMinWidth
     {
         get => GetValue(SliderMinWidthProperty);
         set => SetValue(SliderMinWidthProperty, value);
     }
 
+    /// <inheritdoc cref="ValueFormatProperty"/>
     public string? ValueFormat
     {
         get => GetValue(ValueFormatProperty);
         set => SetValue(ValueFormatProperty, value);
     }
 
+    /// <inheritdoc cref="ShowIconBackgroundProperty"/>
     public bool ShowIconBackground
     {
         get => GetValue(ShowIconBackgroundProperty);

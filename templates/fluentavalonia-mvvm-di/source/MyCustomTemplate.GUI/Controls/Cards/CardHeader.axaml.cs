@@ -47,42 +47,64 @@ public class CardHeader : TemplatedControl
     /// </summary>
     public static readonly StyledProperty<IDataTemplate?> ActionContentTemplateProperty = AvaloniaProperty.Register<CardHeader, IDataTemplate?>(nameof(ActionContentTemplate));
 
+    /// <summary>
+    /// Gets or sets the main title text displayed in SemiBold.
+    /// </summary>
     public string? Title
     {
         get => GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the subtitle/description shown below the title in a smaller font.
+    /// </summary>
     public string? Description
     {
         get => GetValue(DescriptionProperty);
         set => SetValue(DescriptionProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the tooltip for the entire header.
+    /// </summary>
     public string? Tooltip
     {
         get => GetValue(TooltipProperty);
         set => SetValue(TooltipProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the Fluent icon symbol displayed in an accent-colored border.
+    /// </summary>
     public Symbol? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the icon border background is shown.
+    /// When <c>false</c>, the icon border background becomes transparent.
+    /// </summary>
     public bool ShowIconBackground
     {
         get => GetValue(ShowIconBackgroundProperty);
         set => SetValue(ShowIconBackgroundProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the custom content displayed on the right side of the header.
+    /// </summary>
     public object? ActionContent
     {
         get => GetValue(ActionContentProperty);
         set => SetValue(ActionContentProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the data template for the <see cref="ActionContent"/>.
+    /// </summary>
     public IDataTemplate? ActionContentTemplate
     {
         get => GetValue(ActionContentTemplateProperty);

@@ -1,23 +1,24 @@
 ﻿namespace MyCustomTemplate.Core.Models.Items;
 
 /// <summary>
-/// Represents a theme option that can be displayed in the UI
+/// Represents a theme option for display in the UI, pairing a localized display name
+/// with its corresponding <see cref="Theme"/> enum value.
 /// </summary>
 public class ThemeDisplayItem
 {
     /// <summary>
-    /// The display name of the theme that will be shown to the user
+    /// Gets or sets the localized display name shown to the user in theme dropdowns.
     /// </summary>
     public required string DisplayName { get; set; }
 
     /// <summary>
-    /// The actual theme value associated with this display item
+    /// Gets or sets the <see cref="Core.Models.Theme"/> value associated with this display item.
     /// </summary>
     public Theme ThemeValue { get; set; }
 
     /// <summary>
-    /// Returns a string representation of this ThemeDisplayItem
+    /// Returns the display name for this theme option.
     /// </summary>
-    /// <returns>Display name of ThemeDisplayItem</returns>
+    /// <returns>The <see cref="DisplayName"/> of this <see cref="ThemeDisplayItem"/>.</returns>
     public override string ToString() => DisplayName;
 }

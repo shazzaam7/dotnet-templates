@@ -4,12 +4,12 @@ using MyCustomTemplate.GUI.Services;
 namespace MyCustomTemplate.GUI.ViewModels;
 
 /// <summary>
-/// View model for the main application window
+/// ViewModel for the main application window.
 /// </summary>
 public partial class MainWindowViewModel : ObservableObject
 {
     /// <summary>
-    /// The title displayed in the main window title bar
+    /// Gets the title displayed in the main window title bar, localized via <see cref="LocalizationService"/>.
     /// </summary>
     public string WindowTitle { get; } = LocalizationService.GetText("MainWindow.Title");
 }

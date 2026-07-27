@@ -7,43 +7,43 @@ using MyCustomTemplate.GUI.Services;
 namespace MyCustomTemplate.GUI.ViewModels.Pages;
 
 /// <summary>
-/// ViewModel for the CardsTestPage. Provides test bindings for all card controls
-/// and a command to show an InfoBar notification.
+/// ViewModel for the <see cref="Views.Pages.CardsTestPage"/>.
+/// Provides test bindings for all card controls and a command to show an InfoBar notification.
 /// </summary>
 public partial class CardsTestPageViewModel : ObservableObject
 {
     /// <summary>
-    /// Test value for ToggleSwitchCard.
+    /// Gets or sets the test value bound to the <see cref="Controls.Cards.ToggleSwitchCard"/>.
     /// </summary>
     [ObservableProperty] private bool _toggleValue;
 
     /// <summary>
-    /// Test value for ComboBoxCard.
+    /// Gets or sets the selected index bound to the <see cref="Controls.Cards.ComboBoxCard"/>.
     /// </summary>
     [ObservableProperty] private int _comboIndex;
 
     /// <summary>
-    /// Test value for TextBoxCard.
+    /// Gets or sets the test text value bound to the <see cref="Controls.Cards.TextBoxCard"/>.
     /// </summary>
     [ObservableProperty] private string? _textValue;
 
     /// <summary>
-    /// Test value for SliderCard.
+    /// Gets or sets the test slider value (0-100) bound to the <see cref="Controls.Cards.SliderCard"/>.
     /// </summary>
     [ObservableProperty] private double _sliderValue = 50;
 
     /// <summary>
-    /// Test value for NumberBoxCard.
+    /// Gets or sets the test numeric value bound to the <see cref="Controls.Cards.NumberBoxCard"/>.
     /// </summary>
     [ObservableProperty] private double _numberValue = 100;
 
     /// <summary>
-    /// Items for ComboBoxCard test.
+    /// Gets the items displayed in the <see cref="Controls.Cards.ComboBoxCard"/> test control.
     /// </summary>
     public List<string> ComboItems { get; } = ["Option A", "Option B", "Option C"];
 
     /// <summary>
-    /// Shows an informational notification in the InfoBar.
+    /// Shows an informational notification in the InfoBar via <see cref="INotificationService"/>.
     /// </summary>
     [RelayCommand]
     private void ShowNotification()

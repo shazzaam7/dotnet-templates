@@ -6,52 +6,49 @@
 /// </summary>
 public static class PathResolver
 {
-    // Fields
     /// <summary>
     /// The resolved base directory path for the application
     /// </summary>
     private static readonly string _baseDirectory = ResolveBaseDirectory();
 
-    // Properties
     /// <summary>
-    /// Base directory for the app
+    /// Gets the resolved base directory path for the application.
     /// </summary>
     public static string BaseDirectory => _baseDirectory;
 
-    // Functions
     /// <summary>
     /// Resolves the most appropriate base directory for the application at runtime.
     /// </summary>
+    /// <remarks>
+    /// Attempts resolution in order: <c>AppContext.BaseDirectory</c>, executable directory,
+    /// <c>AppDomain.CurrentDomain.BaseDirectory</c>, and finally the current working directory.
+    /// Paths located within the system temp directory are skipped to avoid single-file deployment issues.
+    /// </remarks>
     /// <returns>
     /// An absolute path representing the application's base directory.
     /// </returns>
     private static string ResolveBaseDirectory()
     {
-        // Most accurate method of returning the base directory
         string baseDirectory = AppContext.BaseDirectory;
         if (!string.IsNullOrEmpty(baseDirectory) && !IsTempDirectory(baseDirectory))
         {
             return baseDirectory;
         }
 
-        // Most accurate method of returning the directory where the executable is
         string? exePath = Path.GetDirectoryName(Environment.ProcessPath);
         if (!string.IsNullOrEmpty(exePath))
         {
             return exePath;
         }
 
-        // NOTE: Can return the temp folder if used as a single file
         string appDomainDir = AppDomain.CurrentDomain.BaseDirectory;
         if (!string.IsNullOrEmpty(appDomainDir) && !IsTempDirectory(appDomainDir))
         {
             return appDomainDir;
         }
 
-        // Return the current working directory as a last resort
         return Directory.GetCurrentDirectory();
 
-        // Determines whether the specified path is located within the system temp directory
         static bool IsTempDirectory(string path)
         {
             string tempPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);

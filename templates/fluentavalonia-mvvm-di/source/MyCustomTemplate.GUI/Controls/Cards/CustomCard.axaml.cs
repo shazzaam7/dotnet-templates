@@ -13,6 +13,9 @@ public class CustomCard : ContentControl
     /// </summary>
     public static readonly StyledProperty<string?> TooltipProperty = AvaloniaProperty.Register<CustomCard, string?>(nameof(Tooltip));
 
+    /// <summary>
+    /// Gets or sets the tooltip shown on hover over the entire card.
+    /// </summary>
     public string? Tooltip
     {
         get => GetValue(TooltipProperty);

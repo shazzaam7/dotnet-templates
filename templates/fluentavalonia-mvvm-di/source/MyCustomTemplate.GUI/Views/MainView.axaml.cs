@@ -6,28 +6,33 @@ using MyCustomTemplate.GUI.Services;
 namespace MyCustomTemplate.GUI.Views;
 
 /// <summary>
-/// Shell view containing the NavigationView and content frame for page navigation.
+/// Shell view containing the <see cref="FANavigationView"/> and content frame for page navigation.
 /// </summary>
 public partial class MainView : UserControl
 {
     private NavigationService _navigationService { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainView"/> class.
+    /// Resolves <see cref="NavigationService"/> from the DI container, wires it to the UI controls,
+    /// and navigates to the default page.
+    /// </summary>
     public MainView()
     {
         InitializeComponent();
 
-        // Resolve and wire up the navigation service with the UI controls
         _navigationService = App.Services.GetRequiredService<NavigationService>();
         _navigationService.SetContentFrame(ContentFrame);
         _navigationService.SetNavigationView(NavigationView);
 
-        // Open the default page on startup
         _ = _navigationService.NavigateToTag("CardsTest");
     }
 
     /// <summary>
-    /// Handles menu item clicks by delegating to the navigation service.
+    /// Handles navigation item invocations by delegating to <see cref="NavigationService.Navigate"/>.
     /// </summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">Event arguments containing the invoked navigation item.</param>
     private async void NavigationView_OnItemInvoked(object? sender, FANavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItemContainer is FANavigationViewItem selectedItem)

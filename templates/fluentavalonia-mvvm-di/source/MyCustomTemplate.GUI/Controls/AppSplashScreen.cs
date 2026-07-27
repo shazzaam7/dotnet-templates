@@ -11,7 +11,6 @@ namespace MyCustomTemplate.GUI.Controls;
 /// </summary>
 internal class AppSplashScreen : IFAApplicationSplashScreen
 {
-    // Properties
     /// <summary>
     /// The name of the application to display during the splash screen
     /// </summary>
@@ -33,7 +32,6 @@ internal class AppSplashScreen : IFAApplicationSplashScreen
     /// </summary>
     public int MinimumShowTime => 0;
 
-    // Constructor
     /// <summary>
     /// Initializes a new instance of the <see cref="AppSplashScreen"/> class
     /// </summary>
@@ -42,7 +40,6 @@ internal class AppSplashScreen : IFAApplicationSplashScreen
         SplashScreenContent = new SplashScreenView();
     }
 
-    // Functions
     /// <summary>
     /// Called by <see cref="FAAppWindow"/> to run initialization tasks during the splash screen.
     /// Runs simulated loading steps on a background thread and reports progress to the <see cref="SplashScreenView"/>.

@@ -1,12 +1,23 @@
 ﻿namespace MyCustomTemplate.Core.Models;
 
 /// <summary>
-/// Themes supported by the app
+/// Defines the application themes supported by the app.
 /// </summary>
 public enum Theme
 {
+    /// <summary>
+    /// Follows the operating system's theme preference.
+    /// </summary>
     System,
+
+    /// <summary>
+    /// Light theme with light backgrounds and dark text.
+    /// </summary>
     Light,
+
+    /// <summary>
+    /// Dark theme with dark backgrounds and light text.
+    /// </summary>
     Dark
     // Add new themes here
 }
