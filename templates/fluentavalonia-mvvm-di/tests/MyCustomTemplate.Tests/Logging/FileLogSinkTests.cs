@@ -224,4 +224,76 @@ public class FileLogSinkTests
         Assert.That(files.Length, Is.EqualTo(1));
         Assert.That(Path.GetExtension(files[0]), Is.EqualTo(".log"));
     }
+
+    [Test]
+    public void Write_AfterRotationFailure_DoesNotThrow()
+    {
+        string path = Path.Combine(_tempDir, "app.log");
+        using FileLogSink sink = new(path, rotateDaily: true);
+
+        LogEntry entry = new(
+            DateTimeOffset.UtcNow,
+            LogLevel.Info,
+            "Cat",
+            "before rotation",
+            "f.cs",
+            1,
+            "M");
+        sink.Write(in entry);
+
+        DateOnly futureDate = new(2099, 1, 1);
+        string rotatedPath = Path.Combine(_tempDir, $"app-{futureDate:yyyy-MM-dd}.log");
+        File.WriteAllBytes(rotatedPath, []);
+        File.SetAttributes(rotatedPath, FileAttributes.ReadOnly);
+
+        LogEntry futureEntry = new(
+            new DateTimeOffset(2099, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            LogLevel.Info,
+            "Cat",
+            "after failed rotation",
+            "f.cs",
+            1,
+            "M");
+
+        Assert.DoesNotThrow(() => sink.Write(in futureEntry));
+    }
+
+    [Test]
+    public void Write_AfterRotationFailure_SilentlyDropsEntries()
+    {
+        string path = Path.Combine(_tempDir, "app.log");
+        using FileLogSink sink = new(path, rotateDaily: true);
+
+        LogEntry entry = new(
+            DateTimeOffset.UtcNow,
+            LogLevel.Info,
+            "Cat",
+            "before rotation",
+            "f.cs",
+            1,
+            "M");
+        sink.Write(in entry);
+
+        DateOnly futureDate = new(2099, 1, 1);
+        string rotatedPath = Path.Combine(_tempDir, $"app-{futureDate:yyyy-MM-dd}.log");
+        File.WriteAllBytes(rotatedPath, []);
+        File.SetAttributes(rotatedPath, FileAttributes.ReadOnly);
+
+        LogEntry futureEntry = new(
+            new DateTimeOffset(2099, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            LogLevel.Info,
+            "Cat",
+            "after failed rotation",
+            "f.cs",
+            1,
+            "M");
+        sink.Write(in futureEntry);
+
+        string[] files = Directory.GetFiles(_tempDir, "app*.log");
+        foreach (string file in files)
+        {
+            string content = File.ReadAllText(file);
+            Assert.That(content, Does.Not.Contain("after failed rotation"));
+        }
+    }
 }

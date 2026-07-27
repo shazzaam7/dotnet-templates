@@ -14,7 +14,10 @@ namespace MyCustomTemplate.Logging;
 /// </para>
 /// <para>
 /// At application startup, call <see cref="Configure"/> to set up the log sink (e.g., a
-/// <see cref="CompositeLogSink"/> with <see cref="ConsoleLogSink"/> and <see cref="FileLogSink"/>).
+/// <see cref="CompositeLogSink"/> with a <see cref="ConsoleLogSink"/> wrapped in a
+/// <see cref="MinimumLevelFilterSink"/> and an unfiltered <see cref="FileLogSink"/>).
+/// This ensures the file captures all levels for diagnostics while the console
+/// respects the configured minimum level.
 /// </para>
 /// <para>
 /// Throughout the application, obtain a logger via <see cref="For"/> and call level-specific
@@ -22,9 +25,10 @@ namespace MyCustomTemplate.Logging;
 /// </para>
 /// <code>
 /// // At startup:
-/// MyCustomTemplateLogger.Configure(sink: new CompositeLogSink(
-///     new ConsoleLogSink(),
-///     new FileLogSink("app.log")));
+/// MyCustomTemplateLogger.Configure(LogLevel.Info,
+///     new CompositeLogSink(
+///         new MinimumLevelFilterSink(new ConsoleLogSink(), () => MyCustomTemplateLogger.MinimumLevel),
+///         new FileLogSink("Logs\\app.log")));
 ///
 /// // In consumer code:
 /// private static readonly MyCustomTemplateLogger _log = MyCustomTemplateLogger.For("MyService");
@@ -115,14 +119,34 @@ public sealed class MyCustomTemplateLogger
     /// </param>
     public static void Configure(LogLevel? minimumLevel = null, ILogSink? sink = null)
     {
-        if (minimumLevel.HasValue)
+        lock (Sync)
         {
-            _minimumLevel = minimumLevel.Value;
-        }
+            if (minimumLevel.HasValue)
+            {
+                _minimumLevel = minimumLevel.Value;
+            }
 
-        if (sink is not null)
-        {
-            Sink = sink;
+            if (sink is not null)
+            {
+                ArgumentNullException.ThrowIfNull(sink);
+
+                if (!ReferenceEquals(_sink, sink))
+                {
+                    if (_sink is IDisposable disposable)
+                    {
+                        try
+                        {
+                            disposable.Dispose();
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    }
+
+                    _sink = sink;
+                }
+            }
         }
     }
 
@@ -212,7 +236,7 @@ public sealed class MyCustomTemplateLogger
         }
 
         string normalized = text.Trim();
-        if (Enum.TryParse<LogLevel>(normalized, ignoreCase: true, out level) && Enum.IsDefined(level))
+        if (Enum.TryParse<LogLevel>(normalized, ignoreCase: true, out level) && Enum.IsDefined(level) && level != LogLevel.None)
         {
             return true;
         }
@@ -234,26 +258,26 @@ public sealed class MyCustomTemplateLogger
     }
 
     /// <summary>
-    /// Determines whether a log entry at the specified level would be emitted
-    /// given the current <see cref="MinimumLevel"/>.
+    /// Determines whether any logging output is active.
     /// </summary>
-    /// <param name="level">The log level to check.</param>
+    /// <remarks>
+    /// Per-sink level filtering is handled by <see cref="MinimumLevelFilterSink"/>.
+    /// This method only returns <c>false</c> when <see cref="MinimumLevel"/> is
+    /// <see cref="LogLevel.None"/>, which acts as a global kill-switch that bypasses
+    /// all sinks entirely.
+    /// </remarks>
+    /// <param name="level">The log level to check (unused by the current implementation).</param>
     /// <returns>
-    /// <c>true</c> if entries at this level should be written; otherwise, <c>false</c>.
+    /// <c>true</c> if logging is active; otherwise, <c>false</c>.
     /// </returns>
-    internal static bool IsEnabled(LogLevel level)
-    {
-        if (_minimumLevel == LogLevel.None)
-        {
-            return false;
-        }
-
-        return level >= _minimumLevel;
-    }
+    internal static bool IsEnabled(LogLevel level) => _minimumLevel != LogLevel.None;
 
     /// <summary>
-    /// Constructs a <see cref="LogEntry"/> and writes it to the active sink
-    /// if the level is enabled.
+    /// Constructs a <see cref="LogEntry"/> and writes it to the active sink.
+    /// Entries are only blocked when <see cref="_minimumLevel"/> is
+    /// <see cref="LogLevel.None"/>; all other entries pass through to the sink
+    /// hierarchy where <see cref="MinimumLevelFilterSink"/> instances enforce
+    /// per-sink filtering.
     /// </summary>
     internal static void Write(LogLevel level,
         string category, string message, Exception? exception,

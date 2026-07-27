@@ -157,6 +157,13 @@ public class MyCustomTemplateLoggerTests
     }
 
     [Test]
+    public void TryParseLevel_NoneLevelReturnsFalse()
+    {
+        Assert.That(MyCustomTemplateLogger.TryParseLevel("6", out _), Is.False);
+        Assert.That(MyCustomTemplateLogger.TryParseLevel("None", out _), Is.False);
+    }
+
+    [Test]
     public void SetLogLevel_UpdatesLevel()
     {
         MyCustomTemplateLogger.SetLogLevel(LogLevel.Trace);
@@ -263,7 +270,7 @@ public class MyCustomTemplateLoggerTests
     public void BelowMinimumLevel_DropsEntry()
     {
         TestLogSink testSink = new TestLogSink();
-        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.Sink = new MinimumLevelFilterSink(testSink, () => MyCustomTemplateLogger.MinimumLevel);
         MyCustomTemplateLogger.MinimumLevel = LogLevel.Warning;
 
         MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
@@ -285,6 +292,92 @@ public class MyCustomTemplateLoggerTests
 
         Assert.That(testSink.Entries.Count, Is.GreaterThan(1));
         Assert.That(testSink.Entries[0].Message, Does.Contain("Exception Report Start"));
+    }
+
+    [Test]
+    public void Trace_LogsToSink()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.MinimumLevel = LogLevel.Trace;
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        logger.Trace("trace message");
+
+        Assert.That(testSink.LastEntry, Is.Not.Null);
+        Assert.That(testSink.LastEntry!.Value.Message, Is.EqualTo("trace message"));
+        Assert.That(testSink.LastEntry.Value.Level, Is.EqualTo(LogLevel.Trace));
+    }
+
+    [Test]
+    public void Debug_LogsToSink()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.MinimumLevel = LogLevel.Trace;
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        logger.Debug("debug message");
+
+        Assert.That(testSink.LastEntry, Is.Not.Null);
+        Assert.That(testSink.LastEntry!.Value.Message, Is.EqualTo("debug message"));
+        Assert.That(testSink.LastEntry.Value.Level, Is.EqualTo(LogLevel.Debug));
+    }
+
+    [Test]
+    public void LogExceptionDetails_WithEnvironmentInfo_LogsSystemInformation()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.MinimumLevel = LogLevel.Trace;
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        InvalidOperationException ex = new("test");
+        logger.LogExceptionDetails(ex, includeEnvironmentInfo: true);
+
+        Assert.That(testSink.Entries.Count, Is.GreaterThan(1));
+        bool hasSystemInfo = false;
+        foreach (LogEntry entry in testSink.Entries)
+        {
+            if (entry.Message.Contains("Machine Name"))
+            {
+                hasSystemInfo = true;
+                break;
+            }
+        }
+
+        Assert.That(hasSystemInfo, Is.True);
+    }
+
+    [Test]
+    public void LogExceptionDetails_NestedException_LogsAllLevels()
+    {
+        TestLogSink testSink = new TestLogSink();
+        MyCustomTemplateLogger.Sink = testSink;
+        MyCustomTemplateLogger.MinimumLevel = LogLevel.Trace;
+
+        MyCustomTemplateLogger logger = MyCustomTemplateLogger.For("TestCategory");
+        InvalidOperationException inner = new("inner exception");
+        InvalidOperationException outer = new("outer exception", inner);
+        logger.LogExceptionDetails(outer, includeEnvironmentInfo: false);
+
+        bool hasInner = false;
+        bool hasOuter = false;
+        foreach (LogEntry entry in testSink.Entries)
+        {
+            if (entry.Message.Contains("inner exception"))
+            {
+                hasInner = true;
+            }
+
+            if (entry.Message.Contains("outer exception"))
+            {
+                hasOuter = true;
+            }
+        }
+
+        Assert.That(hasOuter, Is.True);
+        Assert.That(hasInner, Is.True);
     }
 
     private class TestLogSink : ILogSink, IDisposable

@@ -52,12 +52,16 @@ public partial class App : Application
             _ = settingsService.Settings;
 
             // Initialize Logger
-            MyCustomTemplateLogger.Configure(settingsService.Settings.Debug.LogLevel,
+            LogLevel logLevel = settingsService.Settings.Debug.LogLevel;
+            MyCustomTemplateLogger.Configure(logLevel,
                 new CompositeLogSink(
-                    new ConsoleLogSink(),
+                    new MinimumLevelFilterSink(new ConsoleLogSink(), () => MyCustomTemplateLogger.MinimumLevel),
                     new FileLogSink(@"Logs\MyCustomTemplate.log")
                 )
             );
+
+            // Startup diagnostics banner
+            BuildInfo.LogStartupBanner(_log);
 
             // Global exception handlers
             RegisterGlobalExceptionHandlers();

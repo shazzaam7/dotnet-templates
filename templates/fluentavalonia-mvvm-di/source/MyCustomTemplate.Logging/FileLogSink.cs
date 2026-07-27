@@ -116,14 +116,19 @@ public sealed class FileLogSink : ILogSink, IDisposable
                 }
             }
 
+            if (_writer is null)
+            {
+                return;
+            }
+
             if (IncludeTimestamp)
             {
-                _writer!.Write('[');
+                _writer.Write('[');
                 _writer.Write(entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                 _writer.Write(']');
             }
 
-            _writer!.Write('[');
+            _writer.Write('[');
             _writer.Write(entry.Level.ToLevelLabel());
             _writer.Write(']');
             _writer.Write('[');
@@ -229,8 +234,6 @@ public sealed class FileLogSink : ILogSink, IDisposable
     /// </summary>
     public void Dispose()
     {
-        _flushTimer.Dispose();
-
         lock (_sync)
         {
             if (_disposed)
@@ -239,6 +242,7 @@ public sealed class FileLogSink : ILogSink, IDisposable
             }
 
             _disposed = true;
+            _flushTimer.Dispose();
             CloseWriter();
         }
     }

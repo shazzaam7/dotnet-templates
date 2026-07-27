@@ -169,4 +169,34 @@ public class ConsoleLogSinkTests
             Console.SetOut(originalOut);
         }
     }
+
+    [Test]
+    public void Write_WithColors_WritesLevelLabel()
+    {
+        ConsoleLogSink sink = new(useColors: true);
+        LogEntry entry = new(
+            DateTimeOffset.UtcNow,
+            LogLevel.Warning,
+            "TestCat",
+            "colored msg",
+            "File.cs",
+            10,
+            "Method");
+
+        TextWriter originalOut = Console.Out;
+        StringWriter captured = new();
+        Console.SetOut(captured);
+
+        try
+        {
+            sink.Write(in entry);
+            string output = captured.ToString();
+            Assert.That(output, Does.Contain("[WARNING]"));
+            Assert.That(output, Does.Contain("colored msg"));
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+        }
+    }
 }
