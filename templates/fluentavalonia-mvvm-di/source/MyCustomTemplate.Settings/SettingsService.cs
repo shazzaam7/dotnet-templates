@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using MyCustomTemplate.Logging;
 
 namespace MyCustomTemplate.Settings;
 
@@ -8,36 +9,11 @@ namespace MyCustomTemplate.Settings;
 /// Loads and saves settings with support for backup recovery, lenient deserialization,
 /// and thread-safe access.
 /// </summary>
-public sealed class SettingsService : ISettingsService<Settings>
+public sealed class SettingsService
 {
-    /// <summary>
-    /// JSON serialization options for reading and writing settings files.
-    /// </summary>
-    private readonly JsonSerializerOptions _jsonOptions;
-
-    /// <summary>
-    /// The file path to the primary settings JSON file.
-    /// </summary>
-    private readonly string _settingsPath;
-
-    /// <summary>
-    /// The file path to the settings backup JSON file.
-    /// </summary>
-    private readonly string _settingsBackupPath;
-
-    /// <summary>
-    /// Thread synchronization lock for all settings read and write operations.
-    /// </summary>
-    private readonly Lock _lock = new Lock();
-
-    /// <summary>
-    /// The current in-memory settings instance.
-    /// </summary>
-    private Settings _settings = null!;
-
-    /// <summary>
-    /// Indicates whether settings have been loaded from persistent storage.
-    /// </summary>
+    private readonly MyCustomTemplateLogger _log = MyCustomTemplateLogger.For("Settings");
+    private readonly JsonFileStore<Settings> _store;
+    private readonly Lock _lock = new();
     private bool _settingsLoaded;
 
     /// <summary>
@@ -52,7 +28,7 @@ public sealed class SettingsService : ISettingsService<Settings>
             {
                 LoadSettings();
             }
-            return _settings;
+            return _store.Item;
         }
     }
 
@@ -84,74 +60,27 @@ public sealed class SettingsService : ISettingsService<Settings>
     /// </param>
     public SettingsService(JsonSerializerOptions? jsonOptions = null, string? settingsPath = null)
     {
-        _jsonOptions = jsonOptions ?? new JsonSerializerOptions
+        string path = settingsPath
+                      ?? Path.Combine(AppContext.BaseDirectory, "Config", "config.json");
+        _store = new JsonFileStore<Settings>(path, jsonOptions)
         {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-            Converters =
-            {
-                new JsonStringEnumConverter()
-            }
+            WriteDefaultsWhenMissing = true,
+            BackupBeforeSave = true
         };
-
-        _settingsPath = settingsPath
-                        ?? Path.Combine(AppContext.BaseDirectory, "Config", "config.json");
-        _settingsBackupPath = _settingsPath + ".backup";
-
-        string? directory = Path.GetDirectoryName(_settingsPath);
-        if (!string.IsNullOrEmpty(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
     }
 
     /// <summary>
     /// Loads settings from persistent storage.
-    /// If the file does not exist or fails to load, default settings are returned.
-    /// Invalid property values are automatically replaced with their defaults via
-    /// <see cref="LenientJsonDeserializer"/>.
+    /// Falls back to defaults if the file does not exist or is invalid.
     /// </summary>
-    /// <returns>The loaded settings instance, or default settings if loading fails.</returns>
+    /// <returns>The loaded settings instance.</returns>
     public Settings LoadSettings()
     {
         lock (_lock)
         {
-            try
-            {
-                if (!File.Exists(_settingsPath))
-                {
-                    _settings = new Settings();
-                    SaveSettingsInternal();
-                    _settingsLoaded = true;
-                    return _settings;
-                }
-
-                string json = File.ReadAllText(_settingsPath);
-                _settings = LenientJsonDeserializer.Deserialize<Settings>(json, _jsonOptions);
-                _settingsLoaded = true;
-                SaveSettingsInternal();
-                return _settings;
-            }
-            catch
-            {
-                try
-                {
-                    if (File.Exists(_settingsBackupPath))
-                    {
-                        string backupJson = File.ReadAllText(_settingsBackupPath);
-                        _settings = LenientJsonDeserializer.Deserialize<Settings>(backupJson, _jsonOptions);
-                        _settingsLoaded = true;
-                        return _settings;
-                    }
-                }
-                catch
-                {
-                }
-
-                _settings = new Settings();
-                _settingsLoaded = true;
-                return _settings;
-            }
+            _store.Load();
+            _settingsLoaded = true;
+            return _store.Item;
         }
     }
 
@@ -169,7 +98,11 @@ public sealed class SettingsService : ISettingsService<Settings>
     /// </summary>
     public void SaveSettings()
     {
-        SaveSettingsInternal();
+        lock (_lock)
+        {
+            _store.Save();
+            SettingsChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     /// <summary>
@@ -178,7 +111,7 @@ public sealed class SettingsService : ISettingsService<Settings>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SaveSettingsAsync()
     {
-        await Task.Run(SaveSettingsInternal);
+        await Task.Run(SaveSettings);
     }
 
     /// <summary>
@@ -189,8 +122,9 @@ public sealed class SettingsService : ISettingsService<Settings>
     {
         lock (_lock)
         {
-            _settings = settings;
-            SaveSettingsInternal();
+            _store.Item = settings;
+            _store.Save();
+            SettingsChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -202,47 +136,5 @@ public sealed class SettingsService : ISettingsService<Settings>
     public async Task SaveSettingsAsync(Settings settings)
     {
         await Task.Run(() => SaveSettings(settings));
-    }
-
-    /// <summary>
-    /// Creates a backup of the settings file, writes the current settings to disk,
-    /// and raises the <see cref="SettingsChanged"/> event.
-    /// </summary>
-    private void SaveSettingsInternal()
-    {
-        lock (_lock)
-        {
-            try
-            {
-                CreateBackup();
-
-                string json = JsonSerializer.Serialize(_settings, _jsonOptions);
-                File.WriteAllText(_settingsPath, json);
-
-                SettingsChanged?.Invoke(this, EventArgs.Empty);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-    }
-
-    /// <summary>
-    /// Creates a backup of the settings file if it exists.
-    /// </summary>
-    private void CreateBackup()
-    {
-        try
-        {
-            if (File.Exists(_settingsPath))
-            {
-                File.Copy(_settingsPath, _settingsBackupPath, overwrite: true);
-            }
-        }
-        catch
-        {
-            // ignored
-        }
     }
 }
