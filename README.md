@@ -284,6 +284,11 @@ public static IServiceProvider ConfigureServices()
 
 Language resources are stored in `Resources/Language/` as `.axaml` files, loaded via `LocalizationService`.
 
+## Acknowledgments
+
+- [SharpEmu](https://github.com/par274/sharpemu/) — The custom logging infrastructure was inspired by SharpEmu's logger.
+- [Lenovo Legion Toolkit](https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit) — The settings persistence library was inspired by Lenovo Legion Toolkit's settings system.
+
 ## License
 
 See [LICENSE](LICENSE) for details.
