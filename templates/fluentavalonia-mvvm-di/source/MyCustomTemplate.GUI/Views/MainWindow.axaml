@@ -20,6 +20,7 @@
         <controls:FAInfoBar x:Name="InfoBar"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
+                            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
                             IsClosable="True" />
     </Grid>
 </windowing:FAAppWindow>
