@@ -72,6 +72,12 @@ public class SliderCard : ContentControl
         TickPlacement.None);
 
     /// <summary>
+    /// Whether to enable layout rounding on the inner slider.
+    /// </summary>
+    public new static readonly StyledProperty<bool> UseLayoutRoundingProperty = AvaloniaProperty.Register<SliderCard, bool>(
+        nameof(UseLayoutRounding));
+
+    /// <summary>
     /// Minimum width of the slider area.
     /// </summary>
     public static readonly StyledProperty<double> SliderMinWidthProperty = AvaloniaProperty.Register<SliderCard, double>(
@@ -153,6 +159,13 @@ public class SliderCard : ContentControl
     {
         get => GetValue(TickPlacementProperty);
         set => SetValue(TickPlacementProperty, value);
+    }
+
+    /// <inheritdoc cref="UseLayoutRoundingProperty"/>
+    public new bool UseLayoutRounding
+    {
+        get => GetValue(UseLayoutRoundingProperty);
+        set => SetValue(UseLayoutRoundingProperty, value);
     }
 
     /// <inheritdoc cref="SliderMinWidthProperty"/>

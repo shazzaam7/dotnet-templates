@@ -14,16 +14,24 @@
                                           Description="{TemplateBinding Description}"
                                           Icon="{TemplateBinding Icon}"
                                           ShowIconBackground="{TemplateBinding ShowIconBackground}" />
-                        <StackPanel Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    MinWidth="{TemplateBinding SliderMinWidth}">
-                            <Slider Minimum="{TemplateBinding Minimum}"
+                        <Grid Grid.Column="1"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Width="{Binding SliderMinWidth, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Slider Grid.Row="0"
+                                    Minimum="{TemplateBinding Minimum}"
                                     Maximum="{TemplateBinding Maximum}"
                                     Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                     TickFrequency="{TemplateBinding TickFrequency}"
                                     IsSnapToTickEnabled="{TemplateBinding IsSnapToTickEnabled}"
-                                    TickPlacement="{TemplateBinding TickPlacement}" />
-                            <TextBlock HorizontalAlignment="Center"
+                                    TickPlacement="{TemplateBinding TickPlacement}"
+                                    UseLayoutRounding="{TemplateBinding UseLayoutRounding}" />
+                            <TextBlock Grid.Row="1"
+                                       HorizontalAlignment="Center"
                                        Margin="0,-10,0,0">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource DoubleFormatConverter}">
@@ -32,7 +40,7 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                 </local:CustomCard>
             </ControlTemplate>
