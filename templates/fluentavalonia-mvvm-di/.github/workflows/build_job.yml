@@ -56,7 +56,7 @@ jobs:
           dotnet publish -c Release -r win-x64 --self-contained false
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:ExperimentalBuild=${{ inputs.is_experimental }}
+          -p:NightlyBuild=${{ inputs.is_experimental }}
           -o publish/desktop
           source/MyCustomTemplate.GUI/MyCustomTemplate.GUI.csproj
 

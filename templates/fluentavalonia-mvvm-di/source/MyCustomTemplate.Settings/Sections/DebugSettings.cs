@@ -12,11 +12,11 @@ public class DebugSettings
     /// Gets or sets the minimum logging level for log output.
     /// </summary>
     /// <remarks>
-    /// Defaults to <see cref="LogLevel.Info"/> in release builds and <see cref="LogLevel.Trace"/> in experimental builds.
+    /// Defaults to <see cref="LogLevel.Info"/> in release builds and <see cref="LogLevel.Trace"/> in nightly builds.
     /// This value is applied at startup and can be changed at runtime via the Settings page.
     /// </remarks>
     [JsonPropertyName("log_level")]
-#if EXPERIMENTAL_BUILD
+#if NIGHTLY_BUILD
     public LogLevel LogLevel { get; set; } = LogLevel.Trace;
 #else
     public LogLevel LogLevel { get; set; } = LogLevel.Info;

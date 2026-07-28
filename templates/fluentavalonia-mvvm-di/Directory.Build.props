@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <ExperimentalBuild>false</ExperimentalBuild>
-        <DefineConstants Condition="'$(ExperimentalBuild)' == 'true'">$(DefineConstants);EXPERIMENTAL_BUILD</DefineConstants>
+        <NightlyBuild>false</NightlyBuild>
+        <DefineConstants Condition="'$(NightlyBuild)' == 'true'">$(DefineConstants);NIGHTLY_BUILD</DefineConstants>
     </PropertyGroup>
 </Project>
